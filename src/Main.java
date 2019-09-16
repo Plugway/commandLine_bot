@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class Main
 {
+    //private static String QuestPath2 = "src\\test.txt";
     private static String QuestPath = "C:\\Users\\EgorK\\Desktop\\test.txt";
     private static Random rnd = new Random(System.currentTimeMillis());
     public static void main(String[] args) throws IOException, InterruptedException {

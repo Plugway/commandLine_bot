@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class Question {
     public boolean HasBeen = false;
     public static ArrayList<Question> parseQuestions(String path) throws IOException {
         var res = new ArrayList<Question>();
-        var questions = Files.readString(Paths.get(path), Charset.forName("windows-1251")).
+        var questions = Files.readString(Paths.get(path), StandardCharsets.UTF_8).
                 replaceAll("\r\n", "").split("]");
         for(var i = 0; i < questions.length; i++)
         {
