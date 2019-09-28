@@ -15,9 +15,12 @@ public class Question {
         this.HasBeen = !HasBeen;
     }
     public static ArrayList<Question> parseQuestions(String path) throws IOException {
-        var res = new ArrayList<Question>();
         var questions = Files.readString(Paths.get(path), StandardCharsets.UTF_8).
                 replaceAll("\r\n", "").split("]");
+        return generateQuestions(questions);
+    }
+    public static ArrayList<Question> generateQuestions(String[] questions) {
+        var res = new ArrayList<Question>();
         for(var i = 0; i < questions.length; i++)
         {
             var currentQuestion = new Question();
