@@ -67,7 +67,7 @@ public class Logic {
             }
             if (counter == rightCounter && breakFlag)
                 score++;
-            currentQuestion.HasBeen = true;
+            currentQuestion.setHasBeen();
             questions.set(currentQuestionNum-1, currentQuestion);
             givenQuestNum++;
         }
