@@ -5,8 +5,7 @@ import java.util.Scanner;
 
 public class Main
 {
-    //private static String QuestPath2 = "src\\test.txt";
-    public static String QuestPath = "C:\\Users\\EgorK\\Desktop\\test.txt";
+    public static String QuestPath = "src/q&a.txt";     //should work in both Windows and Linux
     public static void main(String[] args) throws IOException, InterruptedException {
         Logic.start();
     }

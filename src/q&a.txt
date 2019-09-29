@@ -1,0 +1,15 @@
+﻿1)First question
+}
+1.First answer$
+2.Second answer$
+3.Third и тд.(в конце каждой строки ожидается)
+}
+2,3
+]
+2)Second quest
+}
+1. Otvet$
+2. kek
+}
+1
+]
