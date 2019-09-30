@@ -21,7 +21,6 @@ public class Question {
                 replaceAll("\r\n", "").split("]");
         return generateQuestions(questions);
     }
-
     public static ArrayList<Question> generateQuestions(String[] questions) {
         var res = new ArrayList<Question>();
         for(var i = 0; i < questions.length; i++)

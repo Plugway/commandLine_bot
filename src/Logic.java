@@ -32,8 +32,17 @@ public class Logic {
         var score = 0;
 
         System.out.println("Сколько вопросов?");
-        var maxQuestNum = Integer.parseInt(in.next());
-
+        int maxQuestNum=0;
+        var inputIsNumber = true;
+        while (inputIsNumber) {
+            try {
+                maxQuestNum = Integer.parseInt(in.next());
+                inputIsNumber = false;
+            } catch (Exception e) {
+                System.out.println("Введите число");
+            }
+        }
+        
         while (!quitQuestFlag)
         {
             if (givenQuestNum == totalQuestionsAvailable || givenQuestNum == maxQuestNum)                              //если все вопросы были то конец
