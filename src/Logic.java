@@ -42,7 +42,7 @@ public class Logic {
                 System.out.println("Введите число");
             }
         }
-        
+
         while (!quitQuestFlag)
         {
             if (givenQuestNum == totalQuestionsAvailable || givenQuestNum == maxQuestNum)                              //если все вопросы были то конец
@@ -103,7 +103,7 @@ public class Logic {
                 quitQuestFlag = true;
                 break;
             default:
-                System.out.print("Я не знаю такой команды.");
+                System.out.println("Я не знаю такой команды.");
         }
     }
 }
