@@ -4,24 +4,28 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Question {
-    public String Question;
-    public ArrayList<String> Answers;
-    public ArrayList<Integer> RightAnswers = new ArrayList<>();
-    public boolean HasBeen = false;
+    private String Question;
+    public String getQuestion() {return Question;}
 
-    public void setHasBeen()
-    {
-        this.HasBeen = !HasBeen;
-    }
+    private List<String> Answers;
+    public List<String> getAnswers(){return Answers;}
 
-    public static ArrayList<Question> parseQuestions(String path) throws IOException {
+    private List<Integer> RightAnswers = new ArrayList<>();
+    public List<Integer> getRightAnswers(){return RightAnswers;}
+
+    private boolean HasBeen = false;
+    public boolean getHasBeen(){return HasBeen;}
+    public void setHasBeen() {this.HasBeen = !HasBeen;}
+
+    public static List<Question> parseQuestions(String path) throws IOException {
         var questions = Files.readString(Paths.get(path), StandardCharsets.UTF_8).
                 replaceAll("\r\n", "").split("]");
         return generateQuestions(questions);
     }
-    public static ArrayList<Question> generateQuestions(String[] questions) {
+    public static List<Question> generateQuestions(String[] questions) {
         var res = new ArrayList<Question>();
         for(var i = 0; i < questions.length; i++)
         {
@@ -29,11 +33,9 @@ public class Question {
             var a = questions[i].split("}");
             currentQuestion.Question = a[0];
             currentQuestion.Answers = new ArrayList<>(Arrays.asList(a[1].split("\\$")));
-            currentQuestion.Answers.trimToSize();
             a = a[2].split(",");
             for (var j = 0; j < a.length; j++)
                 currentQuestion.RightAnswers.add(Integer.parseInt(a[j]));
-            currentQuestion.RightAnswers.trimToSize();
             res.add(currentQuestion);
         }
         res.trimToSize();

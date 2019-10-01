@@ -1,6 +1,5 @@
 import java.io.IOException;
 
-
 public class Main
 {
     public static String QuestPath = "src/q&a.txt";

@@ -7,9 +7,9 @@ public class Tests {
     public void question_setHasBeen_Test()
     {
         var question = new Question();
-        Assert.assertFalse(question.HasBeen);
+        Assert.assertFalse(question.getHasBeen());
         question.setHasBeen();
-        Assert.assertTrue(question.HasBeen);
+        Assert.assertTrue(question.getHasBeen());
     }
 
     @Test
@@ -19,17 +19,17 @@ public class Tests {
         var questions = Question.generateQuestions(input);
         Assert.assertEquals(2, questions.size());
         var firstQuest = questions.get(0);
-        Assert.assertEquals("1)First test question", firstQuest.Question);
-        var fQAnswers = firstQuest.Answers;
+        Assert.assertEquals("1)First test question", firstQuest.getQuestion());
+        var fQAnswers = firstQuest.getAnswers();
         Assert.assertEquals("1.First answer$2.Second answer$3.Third answer", fQAnswers.get(0)+"$"+fQAnswers.get(1)+"$"+fQAnswers.get(2));
-        Assert.assertEquals(2,(int) firstQuest.RightAnswers.get(0));
-        Assert.assertEquals(3,(int) firstQuest.RightAnswers.get(1));
+        Assert.assertEquals(2,(int) firstQuest.getRightAnswers().get(0));
+        Assert.assertEquals(3,(int) firstQuest.getRightAnswers().get(1));
 
         var secondQuest = questions.get(1);
-        Assert.assertEquals("2)Second test question", secondQuest.Question);
-        var sQAnswers = secondQuest.Answers;
+        Assert.assertEquals("2)Second test question", secondQuest.getQuestion());
+        var sQAnswers = secondQuest.getAnswers();
         Assert.assertEquals("1.First answer$2.Second answer", sQAnswers.get(0)+"$"+sQAnswers.get(1));
-        Assert.assertEquals(1,(int) secondQuest.RightAnswers.get(0));
+        Assert.assertEquals(1,(int) secondQuest.getRightAnswers().get(0));
     }
 
     @Test
