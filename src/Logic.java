@@ -13,17 +13,36 @@ public class Logic {
             "Для вызова помощи напиши /help\n" +
             "Чтобы выйти во время викторины напиши /exit\n";
 
-    private static boolean quitQuestFlag = false;
+    private static final BotType botMode = BotType.Console;
+    private static IO botIO;
 
+    private static boolean quitQuestFlag = false;
     private static int getRandom(int min, int max)
     {
         return min + rnd.nextInt(max - min + 1);
     }
 
     public static void start() throws IOException {
-        System.out.print(helpText);
-        //while(true)? or not
+        selectIOClass();    //выбирается в зависимости от botMode
+
+        botIO.println(helpText);
         resolveCommand(in.next().substring(1));
+    }
+
+    private static void selectIOClass()
+    {
+        switch (botMode)
+        {
+            case Console:
+                botIO = new ConsoleIO();
+                break;
+            case Telegram:
+                throw new UnsupportedOperationException("Telegram mode not implemented yet");
+                //var botIO = new TelegramIO();
+                //break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + botMode);
+        }
     }
 
     private static void runProgram() throws IOException {
@@ -35,16 +54,17 @@ public class Logic {
 
         while (!quitQuestFlag)
         {
-            if (givenQuestNum == totalQuestionsAvailable || givenQuestNum == maxQuestNum)//если все вопросы были то конец
+            if (givenQuestNum == totalQuestionsAvailable || givenQuestNum == maxQuestNum)   //если все вопросы были то конец
                 break;
 
             var currentQuestionNum = getNextQuestionNum(questions, totalQuestionsAvailable);
             var currentQuestion = questions.get(currentQuestionNum);
 
-            System.out.print((givenQuestNum+1) + styleDelimeter + currentQuestion.getQuestion() + "\n"); //печатаем вопрос
-            for (var i = 0; i < currentQuestion.getAnswers().size(); i++)  //печатаем ответы
-                System.out.print(currentQuestion.getAnswers().get(i) + "\n");
-            var input = in.next();
+            botIO.println((givenQuestNum+1) + styleDelimeter + currentQuestion.getQuestion()); //печатаем вопрос
+            for (var i = 0; i < currentQuestion.getAnswers().size(); i++)           //печатаем ответы
+                botIO.println(currentQuestion.getAnswers().get(i));
+
+            var input = botIO.readUserQuery();
             if (input.substring(0, 1).equals("/"))
             {
                 resolveCommand(input.substring(1));
@@ -60,7 +80,7 @@ public class Logic {
             questions.set(currentQuestionNum, currentQuestion);
             givenQuestNum++;
         }
-        System.out.println("Твой счет: " + score + " из " + givenQuestNum);
+        botIO.println("Твой счет: " + score + " из " + givenQuestNum);
     }
 
     private static int getNextQuestionNum(List<Question> questions, int totalQuestionsAvailable)
@@ -74,7 +94,7 @@ public class Logic {
     }
     private static int getQuestionNumber(int totalQuestionsAvailable)
     {
-        System.out.println("Сколько вопросов? Общее число вопросов:" + totalQuestionsAvailable);
+        botIO.println("Сколько вопросов? Общее число вопросов:" + totalQuestionsAvailable);
         int maxQuestNum=0;
         var inputIsNumber = false;
         var inputIsGood = false;
@@ -87,9 +107,9 @@ public class Logic {
                     inputIsNumber = true;
                 }
                 else
-                    System.out.println("Число вопросов не может быть больше " + totalQuestionsAvailable);
+                    botIO.println("Число вопросов не может быть больше " + totalQuestionsAvailable);
             } catch (Exception e) {
-                System.out.println("Введите число");
+                botIO.println("Введите число");
             }
         }
         return maxQuestNum;
@@ -127,7 +147,7 @@ public class Logic {
                 quitQuestFlag = true;
                 break;
             default:
-                System.out.println("Я не знаю такой команды.");
+                botIO.println("Я не знаю такой команды.");
         }
     }
 }
