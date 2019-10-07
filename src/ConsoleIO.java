@@ -6,7 +6,7 @@ public class ConsoleIO implements IO
 
     public String readUserQuery()
     {
-        return in.next();
+        return in.nextLine();
     }
 
     public void println(String response)

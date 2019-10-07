@@ -9,7 +9,7 @@ public class Logic {
             "1. Задавать вопросики, на которые тебе нужно ответить. В вопросе может быть несколько верных отетов, которые пишутся через запятую, например, \"2,3\"\n" +
             "Чтобы начать, напиши /start\n" +
             "Для вызова помощи напиши /help\n" +
-            "Чтобы выйти во время викторины напиши /exit\n";
+            "Чтобы выйти во время викторины напиши /exit";
 
     private static final BotType botMode = BotType.Console;
     private static IO botIO;
@@ -78,9 +78,7 @@ public class Logic {
 
     private static int[] handleUserQuizInput() throws IOException {
         int[] intInput = new int[0];
-
-        var answerIsGiven = false;
-        while (!answerIsGiven)
+        while (true)
         {
             var input = botIO.readUserQuery();
             if (input.substring(0, 1).equals("/")) {
@@ -89,12 +87,11 @@ public class Logic {
             }
             try {
                 intInput = getIntInputArray(input);
-                answerIsGiven = true;
+                return intInput;
             } catch (Exception e) {
                 botIO.println("Введите числа, соответствующие ответам, через запятую");
             }
         }
-        return intInput;
     }
 
     private static int getNextQuestionNum(List<Question> questions, int totalQuestionsAvailable)
@@ -111,15 +108,13 @@ public class Logic {
     {
         botIO.println("Сколько вопросов? Общее число вопросов:" + totalQuestionsAvailable);
         int totalQuestionsToAsk=0;
-        var inputIsNumber = false;
         var inputIsGood = false;
-        while (!inputIsNumber & !inputIsGood) {
+        while (!inputIsGood) {
             try {
                 totalQuestionsToAsk = Integer.parseInt(botIO.readUserQuery());
                 if (totalQuestionsToAsk <= totalQuestionsAvailable)
                 {
                     inputIsGood = true;
-                    inputIsNumber = true;
                 }
                 else
                     botIO.println("Число вопросов не может быть больше " + totalQuestionsAvailable);
