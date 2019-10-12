@@ -9,15 +9,15 @@ public class Main
     public static String QuestPath = "src/q&a.txt";
     public static void main(String[] args) throws IOException {
 
-        ApiContextInitializer.init();
+        /*ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
             telegramBotsApi.registerBot(new CmdTelegramBot());
         } catch (TelegramApiException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
-        //Logic.start();
+        Logic.start();
     }
 }
