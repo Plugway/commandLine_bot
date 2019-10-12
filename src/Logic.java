@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 public class Logic {
     private static final String styleDelimeter = ")";
@@ -61,7 +60,7 @@ public class Logic {
             var currentQuestionNum = getNextQuestionNum(questions, totalQuestionsAvailable);
             var currentQuestion = questions.get(currentQuestionNum);
 
-            botIO.println((questionsAskedQuantity+1) + styleDelimeter + currentQuestion.getQuestion());         //печатаем вопрос
+            botIO.println((questionsAskedQuantity+1) + styleDelimeter + currentQuestion.getQuestionText());         //печатаем вопрос
             for (var i = 0; i < currentQuestion.getAnswers().size(); i++)                                       //печатаем ответы
                 botIO.println(currentQuestion.getAnswers().get(i));
 
@@ -69,7 +68,7 @@ public class Logic {
 
             if (isAnswersRight(intInput, currentQuestion.getRightAnswers()))
                 score++;
-            currentQuestion.setHasBeen();
+            currentQuestion.toggleAsked();
             questions.set(currentQuestionNum, currentQuestion);
             questionsAskedQuantity++;
         }
@@ -77,7 +76,7 @@ public class Logic {
     }
 
     private static int[] handleUserQuizInput() throws IOException {
-        int[] intInput = new int[0];
+        int[] intInput;
         while (true)
         {
             var input = botIO.readUserQuery();
@@ -97,7 +96,7 @@ public class Logic {
     private static int getNextQuestionNum(List<Question> questions, int totalQuestionsAvailable)
     {
         var nextQuestionNum = getRandom(1, totalQuestionsAvailable);
-        while (questions.get(nextQuestionNum-1).getHasBeen())                       //если такой вопрос был
+        while (questions.get(nextQuestionNum-1).getAsked())                       //если такой вопрос был
         {
             nextQuestionNum = ((nextQuestionNum)%totalQuestionsAvailable)+1;        //двигаемся вперед пока не найдем
         }
@@ -130,9 +129,8 @@ public class Logic {
         var rightCounter = 0;
         if (rightInput.size() != userInput.length)
             return false;
-        for(var i = 0; i < userInput.length; i++)
-        {
-            if (rightInput.contains(userInput[i]))
+        for (int value : userInput) {
+            if (rightInput.contains(value))
                 rightCounter++;
         }
         return rightCounter == userInput.length;

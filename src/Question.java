@@ -9,41 +9,33 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Question {
-    private String Question;
-    public String getQuestion() {return Question;}
+    private String mQuestionText;
+    public String getQuestionText() {return mQuestionText;}
 
-    private List<String> Answers;
-    public List<String> getAnswers(){return Answers;}
+    private List<String> mAnswers;
+    public List<String> getAnswers(){return mAnswers;}
 
-    private List<Integer> RightAnswers = new ArrayList<>();
-    public List<Integer> getRightAnswers(){return RightAnswers;}
+    private List<Integer> mRightAnswers = new ArrayList<>();
+    public List<Integer> getRightAnswers(){return mRightAnswers;}
 
-    private boolean HasBeen = false;
-    public boolean getHasBeen(){return HasBeen;}
-    public void setHasBeen() {this.HasBeen = !HasBeen;} //toggle
+    private boolean mAsked = false;
+    public boolean getAsked(){return mAsked;}
+    public void toggleAsked() {this.mAsked = !mAsked;} //toggle
 
     public static List<Question> parseQuestions(String path) throws IOException {
         var questions = Files.readString(Paths.get(path), StandardCharsets.UTF_8).
                 replaceAll("\r\n", "").split("]");
-        /*return Stream.of(questions)
-                .map(Question::generateQuestions)
-                .collect(Collectors.toList());*/
-        return generateQuestions(questions);
+        return Stream.of(questions)
+                .map(Question::generateQuestion)
+                .collect(Collectors.toList());
     }
-    public static List<Question> generateQuestions(String[] questions) {
-        var res = new ArrayList<Question>();
-        for(var i = 0; i < questions.length; i++)
-        {
-            var currentQuestion = new Question();
-            var a = questions[i].split("}");
-            currentQuestion.Question = a[0];
-            currentQuestion.Answers = Arrays.asList(a[1].split("\\$"));
-            a = a[2].split(",");
-            for (var j = 0; j < a.length; j++)
-                currentQuestion.RightAnswers.add(Integer.parseInt(a[j]));
-            res.add(currentQuestion);
-        }
-        res.trimToSize();
-        return res;
+    public static Question generateQuestion(String question) {
+        var currentQuestion = new Question();
+        var splitted = question.split("}");
+        currentQuestion.mQuestionText = splitted[0];
+        currentQuestion.mAnswers = Arrays.asList(splitted[1].split("\\$"));
+        var answers = splitted[2].split(",");
+        for (String answer : answers) currentQuestion.mRightAnswers.add(Integer.parseInt(answer));
+        return currentQuestion;
     }
 }
