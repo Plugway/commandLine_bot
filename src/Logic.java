@@ -10,7 +10,7 @@ public class Logic {
             "Для вызова помощи напиши /help\n" +
             "Чтобы выйти во время викторины напиши /exit";
 
-    private static final BotType botMode = BotType.Console;
+    private static final BotType botMode = BotType.Telegram;
     private static IO botIO;
 
     private static boolean quitQuestFlag = false;
@@ -21,10 +21,10 @@ public class Logic {
         return min + rnd.nextInt(max - min + 1);
     }
 
-    public static void start() throws IOException {
+    public static void start() throws IOException, InterruptedException {
         selectIOClass();    //выбирается в зависимости от botMode
 
-        botIO.println(helpText);
+        //botIO.println(helpText);
         resolveCommand(botIO.readUserQuery().substring(1));
     }
 
@@ -36,15 +36,14 @@ public class Logic {
                 botIO = new ConsoleIO();
                 break;
             case Telegram:
-                throw new UnsupportedOperationException("Telegram mode not implemented yet");
-                //var botIO = new TelegramIO();
-                //break;
+                botIO = new TelegramIO();
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + botMode);
         }
     }
 
-    private static void runQuiz() throws IOException {
+    private static void runQuiz() throws IOException, InterruptedException {
         var questions = Question.parseQuestions(Main.QuestPath);
         var totalQuestionsAvailable = questions.size();
         var questionsAskedQuantity = 0;
@@ -75,7 +74,7 @@ public class Logic {
         botIO.println("Твой счет: " + score + " из " + questionsAskedQuantity);
     }
 
-    private static int[] handleUserQuizInput() throws IOException {
+    private static int[] handleUserQuizInput() throws IOException, InterruptedException {
         int[] intInput;
         while (true)
         {
@@ -145,14 +144,14 @@ public class Logic {
         return intInput;
     }
 
-    private static void resolveCommand(String command) throws IOException {
+    private static void resolveCommand(String command) throws IOException, InterruptedException {
         switch (command)
         {
             case "start":
                 runQuiz();
                 break;
             case "help":
-                System.out.print(helpText);
+                botIO.println(helpText);
                 break;
             case "exit":
                 quitQuestFlag = true;

@@ -1,5 +1,5 @@
 public interface IO
 {
-    String readUserQuery();
+    String readUserQuery() throws InterruptedException;
     void println (String response);
 }
