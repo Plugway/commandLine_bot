@@ -114,7 +114,7 @@ public class QuizLogic
         return totalQuestionsToAsk;
     }
 
-    private static boolean isAnswersRight(int[] userInput, List<Integer> rightInput)
+    public static boolean isAnswersRight(int[] userInput, List<Integer> rightInput)
     {
         var rightCounter = 0;
         if (rightInput.size() != userInput.length)

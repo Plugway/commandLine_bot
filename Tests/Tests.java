@@ -1,8 +1,11 @@
 import org.junit.*;
+import java.io.IOException;
+
+import static org.junit.Assert.fail;
 
 public class Tests {
     @Test
-    public void question_setHasBeen_Test()
+    public void questionToggleTest()
     {
         var question = new Question();
         Assert.assertFalse(question.getAsked());
@@ -10,26 +13,47 @@ public class Tests {
         Assert.assertTrue(question.getAsked());
     }
 
-    /*@Test
-    public void question_generator_Test()
+    @Test
+    public void botIO_selectionTest()
     {
-        var input = "1)First test question}1.First answer$2.Second answer$3.Third answer}2,3]2)Second test question}1.First answer$2.Second answer}1]".split("]");
-        var questions = Question.generateQuestion(input);
-        Assert.assertEquals(2, questions.size());
-        var firstQuest = questions.get(0);
-        Assert.assertEquals("1)First test question", firstQuest.getQuestion());
-        var fQAnswers = firstQuest.getAnswers();
-        Assert.assertEquals("1.First answer$2.Second answer$3.Third answer", fQAnswers.get(0)+"$"+fQAnswers.get(1)+"$"+fQAnswers.get(2));
-        Assert.assertEquals(2,(int) firstQuest.getRightAnswers().get(0));
-        Assert.assertEquals(3,(int) firstQuest.getRightAnswers().get(1));
-
-        var secondQuest = questions.get(1);
-        Assert.assertEquals("2)Second test question", secondQuest.getQuestion());
-        var sQAnswers = secondQuest.getAnswers();
-        Assert.assertEquals("1.First answer$2.Second answer", sQAnswers.get(0)+"$"+sQAnswers.get(1));
-        Assert.assertEquals(1,(int) secondQuest.getRightAnswers().get(0));
+        BotIO.selectIOClass();
+        if ( ! (Main.botMode == BotType.Console || Main.botMode == BotType.Telegram) )
+            fail("Illegal botMode detected");
     }
 
     @Test
-    public void some_Test(){} //idk что еще тут тестировать...*/
+    public void deserializationTest() throws IOException, ClassNotFoundException {
+        Serialization.deserialize(Main.UsersPath);                  //failure if throws exception
+    }
+
+    @Test
+    public void serializationTest() throws IOException {
+        Serialization.serialize(User.userTable, Main.UsersPath);    //failure if throws exception
+    }
+
+    @Test
+    public void threeSecondsTest() throws IOException, InterruptedException {
+        var timerStart = System.currentTimeMillis();
+        long timerEnd = timerStart + 3000;
+        Main.main(new String[0]);
+        while (System.currentTimeMillis() < timerEnd) {}            //failure if throws exception
+    }
+
+    @Test
+    public void questionGenerationTest() {
+        var testQuestion = Question.generateQuestion("What does the WINE acronym mean?\n" +
+                "}\n" +
+                "1. Wine Is Not an Emulator$\n" +
+                "2. Wine Is Not Unix $\n" +
+                "3. We and I made a NEw acronym$\n" +
+                "}" +
+                "1");
+
+        //i begrudgingly made the isAnswersRight() method public so i can test it, but i don't feel very good about it
+        Assert.assertTrue(QuizLogic.isAnswersRight(new int[] {1}, testQuestion.getRightAnswers()));
+        Assert.assertFalse(QuizLogic.isAnswersRight(new int[] {2}, testQuestion.getRightAnswers()));
+        Assert.assertFalse(QuizLogic.isAnswersRight(new int[] {3}, testQuestion.getRightAnswers()));
+    }
+
+
 }
