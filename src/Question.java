@@ -20,7 +20,7 @@ public class Question {
 
     private boolean mAsked = false;
     public boolean getAsked(){return mAsked;}
-    public void toggleAsked() {this.mAsked = !mAsked;} //toggle
+    public void toggleAsked() {this.mAsked = !mAsked;}
 
     public static List<Question> parseQuestions(String path) throws IOException {
         var questions = Files.readString(Paths.get(path), StandardCharsets.UTF_8).

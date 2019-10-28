@@ -1,5 +1,5 @@
 public interface IO
 {
-    String readUserQuery() throws InterruptedException;
-    void println (String response);
+    String readUserQuery(User chatId) throws InterruptedException;
+    void println (String response, long chatId);
 }
