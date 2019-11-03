@@ -18,19 +18,17 @@ public class TelegramIO implements IO {
         });
     }
     public String readUserQuery(User user) throws InterruptedException {
-        var index = User.userTable.indexOf(user);
-        while (User.userTable.get(index).messages.size() == 0)
+        while (user.messages.size() == 0)
         {
             Thread.sleep(1000);
         }
-        var usr = User.userTable.get(index);
-        var usrInput = usr.messages;
-        System.out.println("Введено:\n"+usrInput.peek()+ "\n ChatId=" + usr.getChatId());
-        return usrInput.poll();
+        var userInput = user.messages;
+        System.out.println("Ввод от юзера с chatId " + user.getChatId() + ":\n" +userInput.peek());
+        return userInput.poll();
     }
 
     public void println(String response, long chatId) {
         bot.execute(new SendMessage(chatId, response));
-        System.out.println("Выслано:\n"+response+"\n ChatId="+chatId);
+        System.out.println("Выслано юзеру с chatId " + chatId + ":\n" + response);
     }
 }

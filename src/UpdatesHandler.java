@@ -23,14 +23,7 @@ public class UpdatesHandler
             var user = new User(chat);
             User.userTable.add(user);
             Serialization.serialize(User.userTable, Main.UsersPath);
-            var thread = new Thread(() -> {
-                try {
-                    new Logic(user).startUserInteraction(true);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
-            thread.start();
+            UserInteractionThreads.createThread(user, true);
         }
         return update.updateId();
     }

@@ -23,23 +23,19 @@ public class Logic
     public static void initializeAllUserThreads()
     {
         for (User user : User.userTable)
-        {
-            var thread = new Thread(() -> {
-                try {
-                    new Logic(user).startUserInteraction(false);
-                } catch (InterruptedException | IOException e){
-                    e.printStackTrace();
-                }
-            });
-            thread.start();
+            UserInteractionThreads.createThread(user, false);
+    }
+
+    public void startUserInteraction() throws IOException, InterruptedException
+    {
+        BotIO.getBotIO().println(helpText, chatId);
+        while (true) {
+            UserCommandHandler.resolveCommand(BotIO.getBotIO().readUserQuery(user), user, true);   //that "true" that gets passed feels like a kludge
         }
     }
 
-    public void startUserInteraction(boolean isFirstStart) throws IOException, InterruptedException
+    public void resumeUserInteraction() throws IOException, InterruptedException
     {
-        if (isFirstStart)
-            BotIO.getBotIO().println(helpText, chatId);
-
         while (true) {
             UserCommandHandler.resolveCommand(BotIO.getBotIO().readUserQuery(user), user, true);   //that "true" that gets passed feels like a kludge
         }

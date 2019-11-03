@@ -108,7 +108,7 @@ public class QuizLogic
                 else
                     BotIO.getBotIO().println(failNum[getRandom(0, failNum.length-1)], chatId);
             } catch (Exception e) {
-                BotIO.getBotIO().println("Введите число.", chatId);
+                BotIO.getBotIO().println("Введите натуральное число.", chatId);
             }
         }
         return totalQuestionsToAsk;
