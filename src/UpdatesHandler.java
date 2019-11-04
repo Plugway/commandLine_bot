@@ -5,22 +5,25 @@ import java.util.List;
 
 public class UpdatesHandler
 {
-    public static long handleUpdates(List<Update> updates) throws IOException
+    public static long handleUpdates(List<Update> updates, IO botIO) throws IOException
     {
         var update = updates.get(0);
         var chat = update.message().chat();
         var user = new User(chat);
         if (User.userTable.contains(user))
         {
+            var index = User.userTable.indexOf(user);       //why is this line necessary?
+            var user2 = User.userTable.get(index);          //why is this line necessary? WHY
             if (update.message().text() != null)
-                user.messages.add(update.message().text());
-            User.userTable.add(user);
+                user2.messages.add(update.message().text());
+            User.userTable.set(index, user2);               //why is this line necessary? WHY???
         }
         else
         {
-            User.userTable.add(user);
+            var newUser = new User(chat);
+            User.userTable.add(newUser);
             Serialization.serialize(User.userTable, Main.UsersPath);
-            UserInteractionThreads.createThread(user, true);
+            UserInteractionThreads.createThread(newUser, true, botIO);
         }
         return update.updateId();
     }

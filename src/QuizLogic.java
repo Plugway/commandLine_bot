@@ -21,14 +21,14 @@ public class QuizLogic
         return min + rnd.nextInt(max - min + 1);
     }
 
-    public void runQuiz() throws IOException, InterruptedException
+    public void runQuiz(IO botIO) throws IOException, InterruptedException
     {
         var questions = Question.parseQuestions(Main.QuestPath);
         var totalQuestionsAvailable = questions.size();
         var questionsAskedQuantity = 0;
         var score = 0;
 
-        var totalQuestionsToAsk = getTotalQuestionsToAsk(totalQuestionsAvailable);
+        var totalQuestionsToAsk = getTotalQuestionsToAsk(totalQuestionsAvailable, botIO);
 
         while (!questIsQuit)
         {
@@ -38,34 +38,34 @@ public class QuizLogic
             var currentQuestionNum = getNextQuestionNum(questions, totalQuestionsAvailable);
             var currentQuestion = questions.get(currentQuestionNum);
 
-            BotIO.getBotIO().println((questionsAskedQuantity+1) + styleDelimeter + currentQuestion.getQuestionText(), chatId);         //печатаем вопрос
+            botIO.println((questionsAskedQuantity+1) + styleDelimeter + currentQuestion.getQuestionText(), chatId);         //печатаем вопрос
             for (var i = 0; i < currentQuestion.getAnswers().size(); i++)                                       //печатаем ответы
-                BotIO.getBotIO().println(currentQuestion.getAnswers().get(i), chatId);
+                botIO.println(currentQuestion.getAnswers().get(i), chatId);
 
-            var intInput = handleUserQuizInput();
+            var intInput = handleUserQuizInput(botIO);
             if (questIsQuit)
                 break;
             if (isAnswersRight(intInput, currentQuestion.getRightAnswers()))
             {
-                BotIO.getBotIO().println("Верно!", chatId);
+                botIO.println("Верно!", chatId);
                 score++;
             }
             else
-                BotIO.getBotIO().println("Неверно :(", chatId);
+                botIO.println("Неверно :(", chatId);
             currentQuestion.toggleAsked();
             questions.set(currentQuestionNum, currentQuestion);
             questionsAskedQuantity++;
         }
-        BotIO.getBotIO().println("Твой счет: " + score + " из " + questionsAskedQuantity, chatId);
+        botIO.println("Твой счет: " + score + " из " + questionsAskedQuantity, chatId);
         questIsQuit = true;
     }
 
-    private int[] handleUserQuizInput() throws IOException, InterruptedException {
+    private int[] handleUserQuizInput(IO botIO) throws IOException, InterruptedException {
         int[] intInput;
         while (!questIsQuit) {
-            var input = BotIO.getBotIO().readUserQuery(user);
+            var input = botIO.readUserQuery(user);
             if (input.substring(0, 1).equals("/")) {
-                if (UserCommandHandler.resolveCommand(input, user, questIsQuit) == 1)       //ugly hack
+                if (UserCommandHandler.resolveCommand(input, user, questIsQuit, botIO) == 1)       //ugly hack
                     questIsQuit = true;
                 continue;
             }
@@ -73,7 +73,7 @@ public class QuizLogic
                 intInput = getIntInputArray(input);
                 return intInput;
             } catch (Exception e) {
-                BotIO.getBotIO().println("Введите числа, соответствующие ответам.\nЕсли вы считаете, что ответов несколько, то введите их через запятую.", chatId);
+                botIO.println("Введите числа, соответствующие ответам.\nЕсли вы считаете, что ответов несколько, то введите их через запятую.", chatId);
             }
         }
         return null;
@@ -89,14 +89,14 @@ public class QuizLogic
         return nextQuestionNum-1;
     }
 
-    private int getTotalQuestionsToAsk(int totalQuestionsAvailable)
+    private int getTotalQuestionsToAsk(int totalQuestionsAvailable, IO botIO)
     {
-        BotIO.getBotIO().println("Сколько вопросов? Общее число вопросов:" + totalQuestionsAvailable, chatId);
+        botIO.println("Сколько вопросов? Общее число вопросов:" + totalQuestionsAvailable, chatId);
         int totalQuestionsToAsk=0;
         var inputIsGood = false;
         while (!inputIsGood) {
             try {
-                totalQuestionsToAsk = Integer.parseInt(BotIO.getBotIO().readUserQuery(user));
+                totalQuestionsToAsk = Integer.parseInt(botIO.readUserQuery(user));
                 var failNum = new String[]{
                         "Возможно, тебе не стоит учавствовать в викторине, если у тебя этот вопрос вызывает затруднения...",
                         "Число вопросов должно быть быть меньше " + totalQuestionsAvailable+" и больше 0."
@@ -106,9 +106,9 @@ public class QuizLogic
                     inputIsGood = true;
                 }
                 else
-                    BotIO.getBotIO().println(failNum[getRandom(0, failNum.length-1)], chatId);
+                    botIO.println(failNum[getRandom(0, failNum.length-1)], chatId);
             } catch (Exception e) {
-                BotIO.getBotIO().println("Введите натуральное число.", chatId);
+                botIO.println("Введите натуральное число.", chatId);
             }
         }
         return totalQuestionsToAsk;

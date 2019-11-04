@@ -1,3 +1,3 @@
-public enum BotType {
+public enum BotIOType {
     Console, Telegram;
 }

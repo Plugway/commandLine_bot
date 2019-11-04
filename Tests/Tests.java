@@ -13,13 +13,15 @@ public class Tests {
         Assert.assertTrue(question.getAsked());
     }
 
+    /*
     @Test
     public void botIO_selectionTest()
     {
         BotIO.selectIOClass();
-        if ( ! (Main.botMode == BotType.Console || Main.botMode == BotType.Telegram) )
+        if ( ! (Main.botMode == BotIOType.Console || Main.botMode == BotIOType.Telegram) )
             fail("Illegal botMode detected");
     }
+    */
 
     @Test
     public void deserializationTest() throws IOException, ClassNotFoundException {
@@ -32,7 +34,7 @@ public class Tests {
     }
 
     @Test
-    public void threeSecondsTest() throws IOException, InterruptedException {
+    public void threeSecondsTest() throws IOException, InterruptedException, ClassNotFoundException {
         var timerStart = System.currentTimeMillis();
         long timerEnd = timerStart + 3000;
         Main.main(new String[0]);

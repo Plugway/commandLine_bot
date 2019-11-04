@@ -3,20 +3,21 @@ import com.pengrad.telegrambot.request.SendMessage;
 
 import java.io.IOException;
 
-public class TelegramIO implements IO {
-
-    private TelegramBot bot = new TelegramBot("00000");
+public class TelegramIO implements IO
+{
+    private TelegramBot bot = new TelegramBot("956241997:AAE1ePPGGpKbSj8j19yIDQ-3aZf6UKDmJ-I");
 
     public TelegramIO() {
         bot.setUpdatesListener(updates -> {
             try {
-                return (int) UpdatesHandler.handleUpdates(updates);
+                return (int) UpdatesHandler.handleUpdates(updates, this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return 0;       //the point of this return statement? didn't need it until added a try/catch
         });
     }
+
     public String readUserQuery(User user) throws InterruptedException {
         while (user.messages.size() == 0)
         {
