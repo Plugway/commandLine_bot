@@ -14,7 +14,6 @@ public class QuizLogic
     private long chatId;
     private static final String styleDelimeter = ")";
     private static Random rnd = new Random(System.nanoTime());
-    private boolean questIsQuit = false;
 
     private static int getRandom(int min, int max)
     {
@@ -30,45 +29,47 @@ public class QuizLogic
 
         var totalQuestionsToAsk = getTotalQuestionsToAsk(totalQuestionsAvailable, botIO);
 
-        while (!questIsQuit)
+        try
         {
-            if (questionsAskedQuantity == totalQuestionsToAsk)
-                break;                                              //если все вопросы были то конец
-
-            var currentQuestionNum = getNextQuestionNum(questions, totalQuestionsAvailable);
-            var currentQuestion = questions.get(currentQuestionNum);
-
-            botIO.println((questionsAskedQuantity+1) + styleDelimeter + currentQuestion.getQuestionText(), chatId);         //печатаем вопрос
-            for (var i = 0; i < currentQuestion.getAnswers().size(); i++)                                       //печатаем ответы
-                botIO.println(currentQuestion.getAnswers().get(i), chatId);
-
-            var intInput = handleUserQuizInput(botIO);
-            if (questIsQuit)
-                break;
-            if (isAnswersRight(intInput, currentQuestion.getRightAnswers()))
+            while (true)
             {
-                botIO.println("Верно!", chatId);
-                score++;
+                if (questionsAskedQuantity == totalQuestionsToAsk)
+                    throw new QuizShouldFinishException();
+
+                var currentQuestionNum = getNextQuestionNum(questions, totalQuestionsAvailable);
+                var currentQuestion = questions.get(currentQuestionNum);
+
+                botIO.println((questionsAskedQuantity + 1) + styleDelimeter + currentQuestion.getQuestionText(), chatId);         //печатаем вопрос
+                for (var i = 0; i < currentQuestion.getAnswers().size(); i++)                                       //печатаем ответы
+                    botIO.println(currentQuestion.getAnswers().get(i), chatId);
+
+                var intInput = handleUserQuizInput(botIO);
+                if (isAnswersRight(intInput, currentQuestion.getRightAnswers())) {
+                    botIO.println("Верно!", chatId);
+                    score++;
+                } else
+                    botIO.println("Неверно :(", chatId);
+                currentQuestion.toggleAsked();
+                questions.set(currentQuestionNum, currentQuestion);
+                questionsAskedQuantity++;
             }
-            else
-                botIO.println("Неверно :(", chatId);
-            currentQuestion.toggleAsked();
-            questions.set(currentQuestionNum, currentQuestion);
-            questionsAskedQuantity++;
+        } catch (QuizShouldFinishException e) {
+            botIO.println("Викторина завершена.", chatId);
+            botIO.println("Твой счет: " + score + " из " + questionsAskedQuantity, chatId);
         }
-        botIO.println("Твой счет: " + score + " из " + questionsAskedQuantity, chatId);
-        questIsQuit = true;
     }
 
-    private int[] handleUserQuizInput(IO botIO) throws IOException, InterruptedException {
+    private int[] handleUserQuizInput(IO botIO) throws InterruptedException, IOException, QuizShouldFinishException {
         int[] intInput;
-        while (!questIsQuit) {
+        while (true) {
             var input = botIO.readUserQuery(user);
-            if (input.substring(0, 1).equals("/")) {
-                if (UserCommandHandler.resolveCommand(input, user, questIsQuit, botIO) == 1)       //ugly hack
-                    questIsQuit = true;
+            if (input.substring(0, 1).equals("/"))
+            {
+                UserCommandHandler.resolveCommand(input, user, true, botIO);
                 continue;
             }
+            //otherwise we are probably dealing with an answer
+
             try {
                 intInput = getIntInputArray(input);
                 return intInput;
@@ -76,7 +77,6 @@ public class QuizLogic
                 botIO.println("Введите числа, соответствующие ответам.\nЕсли вы считаете, что ответов несколько, то введите их через запятую.", chatId);
             }
         }
-        return null;
     }
 
     private static int getNextQuestionNum(List<Question> questions, int totalQuestionsAvailable)
@@ -108,7 +108,7 @@ public class QuizLogic
                 else
                     botIO.println(failNum[getRandom(0, failNum.length-1)], chatId);
             } catch (Exception e) {
-                botIO.println("Введите натуральное число.", chatId);
+                botIO.println("Введите натуральное число больше 0 и меньше либо равно 143.", chatId);
             }
         }
         return totalQuestionsToAsk;

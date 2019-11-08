@@ -12,6 +12,7 @@ public class UserInteractionThreads
                     new Logic(user).resumeUserInteraction(botIO);
             } catch (InterruptedException | IOException e){
                 e.printStackTrace();
+                throw new RuntimeException("New thread could not be created.");
             }
         });
         thread.start();

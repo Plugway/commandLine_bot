@@ -13,8 +13,8 @@ public class TelegramIO implements IO
                 return (int) UpdatesHandler.handleUpdates(updates, this);
             } catch (IOException e) {
                 e.printStackTrace();
+                throw new RuntimeException();
             }
-            return 0;       //the point of this return statement? didn't need it until added a try/catch
         });
     }
 

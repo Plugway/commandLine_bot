@@ -10,19 +10,19 @@ public class UpdatesHandler
         var update = updates.get(0);
         var chat = update.message().chat();
         var user = new User(chat);
-        if (User.userTable.contains(user))
+        if (UserTable.contains(user))
         {
-            var index = User.userTable.indexOf(user);       //why is this line necessary?
-            var user2 = User.userTable.get(index);          //why is this line necessary? WHY
+            var index = UserTable.getIndexOf(user);        //why is this line necessary?
+            var user2 = UserTable.getUser(index);          //why is this line necessary? WHY
             if (update.message().text() != null)
                 user2.messages.add(update.message().text());
-            User.userTable.set(index, user2);               //why is this line necessary? WHY???
+            UserTable.setUser(index, user2);               //why is this line necessary? WHY???
         }
         else
         {
             var newUser = new User(chat);
-            User.userTable.add(newUser);
-            Serialization.serialize(User.userTable, Main.UsersPath);
+            UserTable.add(newUser);
+            UserTableSerialization.serialize(UserTable.get(), Main.UsersPath);
             UserInteractionThreads.createThread(newUser, true, botIO);
         }
         return update.updateId();

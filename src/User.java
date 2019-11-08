@@ -2,6 +2,7 @@ import com.pengrad.telegrambot.model.Chat;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -13,16 +14,6 @@ public class User implements Serializable {
         firstName = chat.firstName();
         lastName = chat.lastName();
         chatId = chat.id();
-    }
-
-    public static List<User> userTable;
-
-    static {
-        try {
-            userTable = (List<User>)Serialization.deserialize(Main.UsersPath);      // a bad cast?
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     public Queue<String> messages = new PriorityQueue<>();

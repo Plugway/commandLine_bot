@@ -2,13 +2,11 @@ public class BotIOFactory
 {
     public static IO getBotIO(BotIOType botIOType)
     {
-        switch (botIOType) {
-            case Console:
-                return new ConsoleIO();
-            case Telegram:
-                return new TelegramIO();
-            default:
-                throw new IllegalStateException("Unexpected botType value: " + botIOType);
+        if (botIOType == BotIOType.Console) {
+            return new ConsoleIO();
+        } else if (botIOType == BotIOType.Telegram) {
+            return new TelegramIO();
         }
+        throw new IllegalStateException("Unexpected botType value: " + botIOType);
     }
 }

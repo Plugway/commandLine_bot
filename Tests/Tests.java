@@ -23,15 +23,17 @@ public class Tests {
     }
     */
 
+    /*
     @Test
     public void deserializationTest() throws IOException, ClassNotFoundException {
-        Serialization.deserialize(Main.UsersPath);                  //failure if throws exception
+        ObjectSerialization.deserialize(Main.UsersPath);                  //failure if throws exception
     }
 
     @Test
     public void serializationTest() throws IOException {
-        Serialization.serialize(User.userTable, Main.UsersPath);    //failure if throws exception
+        ObjectSerialization.serialize(UserTable.get(), Main.UsersPath);    //failure if throws exception
     }
+    */
 
     @Test
     public void threeSecondsTest() throws IOException, InterruptedException, ClassNotFoundException {
