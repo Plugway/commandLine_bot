@@ -1,21 +1,12 @@
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 
-import java.io.IOException;
-
 public class TelegramIO implements IO
 {
-    private TelegramBot bot = new TelegramBot("956241997:AAE1ePPGGpKbSj8j19yIDQ-3aZf6UKDmJ-I");
+    private TelegramBot bot = new TelegramBot("00000");
 
     public TelegramIO() {
-        bot.setUpdatesListener(updates -> {
-            try {
-                return (int) UpdatesHandler.handleUpdates(updates, this);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException();
-            }
-        });
+        bot.setUpdatesListener(updates -> (int) UpdatesHandler.handleUpdates(updates, this));
     }
 
     public String readUserQuery(User user) throws InterruptedException {

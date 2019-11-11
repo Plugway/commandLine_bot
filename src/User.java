@@ -1,9 +1,6 @@
 import com.pengrad.telegrambot.model.Chat;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -14,6 +11,7 @@ public class User implements Serializable {
         firstName = chat.firstName();
         lastName = chat.lastName();
         chatId = chat.id();
+        this.chat = chat;
     }
 
     public Queue<String> messages = new PriorityQueue<>();
@@ -21,9 +19,13 @@ public class User implements Serializable {
     private String firstName;
     private String lastName;
     private long chatId;
+    private Chat chat;
 
     public long getChatId() {
         return chatId;
+    }
+    public Chat getChat() {
+        return chat;
     }
     public String getUsername() {
         return username;

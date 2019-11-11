@@ -1,6 +1,4 @@
-import com.pengrad.telegrambot.model.Update;
 import java.io.*;
-import java.util.*;
 
 public class Logic {
     public Logic(User user) {

@@ -7,10 +7,10 @@ public class UserCommandHandler
         switch (command) {
             case "/start":
                 if (!quizIsRunning) {
-                    new QuizLogic(user).runQuiz(botIO);
+                    new QuizLogic().runQuiz(user, botIO);
                 }
                 else
-                    botIO.println("Вы не можете начать новую викторину, пока продолжается текущая.", user.getChatId());
+                    botIO.println("Вы не можете начать ещё одну викторину. Сначала завершите текущую.", user.getChatId());
                 break;
             case "/help":
                 botIO.println(Logic.getHelpText(), user.getChatId());

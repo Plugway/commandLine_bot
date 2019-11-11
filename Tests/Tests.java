@@ -23,25 +23,28 @@ public class Tests {
     }
     */
 
-    /*
     @Test
     public void deserializationTest() throws IOException, ClassNotFoundException {
-        ObjectSerialization.deserialize(Main.UsersPath);                  //failure if throws exception
+        UserTableSerialization.deserialize(Main.UsersPath);                  //failure if throws exception
     }
 
+    /*
     @Test
     public void serializationTest() throws IOException {
-        ObjectSerialization.serialize(UserTable.get(), Main.UsersPath);    //failure if throws exception
+        UserTableSerialization.serialize(UserTable.get(), Main.UsersPath);    //failure if throws exception
     }
     */
 
+    /*
     @Test
     public void threeSecondsTest() throws IOException, InterruptedException, ClassNotFoundException {
         var timerStart = System.currentTimeMillis();
         long timerEnd = timerStart + 3000;
         Main.main(new String[0]);
         while (System.currentTimeMillis() < timerEnd) {}            //failure if throws exception
+                                                                    //^ haha lol no not really
     }
+    */
 
     @Test
     public void questionGenerationTest() {

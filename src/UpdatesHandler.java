@@ -1,28 +1,31 @@
 import com.pengrad.telegrambot.model.Update;
 
-import java.io.IOException;
 import java.util.List;
 
 public class UpdatesHandler
 {
-    public static long handleUpdates(List<Update> updates, IO botIO) throws IOException
+    public static long handleUpdates(List<Update> updates, IO botIO)
     {
         var update = updates.get(0);
         var chat = update.message().chat();
-        var user = new User(chat);
-        if (UserTable.contains(user))
+        var userIsPresent = false;
+        for (User user : UserTable.get())
         {
-            var index = UserTable.getIndexOf(user);        //why is this line necessary?
-            var user2 = UserTable.getUser(index);          //why is this line necessary? WHY
-            if (update.message().text() != null)
-                user2.messages.add(update.message().text());
-            UserTable.setUser(index, user2);               //why is this line necessary? WHY???
+            if (user.getChat().equals(chat))
+            {
+                if (update.message().text() != null)
+                    user.messages.add(update.message().text());
+                userIsPresent = true;
+                break;
+            }
         }
-        else
+        if (!userIsPresent)
         {
             var newUser = new User(chat);
             UserTable.add(newUser);
             UserTableSerialization.serialize(UserTable.get(), Main.UsersPath);
+            Hash.writeHashOfFileToFile(Main.UsersPath, Main.UsersHashPath);
+
             UserInteractionThreads.createThread(newUser, true, botIO);
         }
         return update.updateId();

@@ -1,8 +1,4 @@
-import com.pengrad.telegrambot.model.Chat;
-
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ObjectSerialization
 {
