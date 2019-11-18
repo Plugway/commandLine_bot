@@ -5,8 +5,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class User implements Serializable {
-    public User(Chat chat)
-    {
+    public User(Chat chat) {
         username = chat.username();
         firstName = chat.firstName();
         lastName = chat.lastName();
@@ -20,28 +19,42 @@ public class User implements Serializable {
     private String lastName;
     private long chatId;
     private Chat chat;
+    private int highscore;
 
     public long getChatId() {
         return chatId;
     }
-    public Chat getChat() {
-        return chat;
-    }
+
     public String getUsername() {
         return username;
     }
-    public String getFirstName(){return firstName;}
-    public String getLastName(){return lastName;}
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setHighscore(int highscore) {
+        this.highscore = highscore;
+    }
+
+    public int getHighscore() {
+        return highscore;
+    }
 
     @Override
     public boolean equals(Object o) {
         try {
-            var user = (User)o;
+            var user = (User) o;
             return this.chatId == user.getChatId();
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             return false;
         }
     }
+
     @Override
     public int hashCode() {
         return java.util.Objects.hashCode(this.getChatId());

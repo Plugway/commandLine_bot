@@ -4,10 +4,8 @@ import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Hash
-{
-    public static boolean verifyHashFileAgainst(String hashFilePath, String file2Path)
-    {
+public class Hash {
+    public static boolean verifyHashFileAgainst(String hashFilePath, String file2Path) {
         byte[] file2Contents;
         try {
             file2Contents = readFileAsBytes(file2Path);
@@ -20,8 +18,7 @@ public class Hash
         String hashFileContents;
         try {
             hashFileContents = new String(readFileAsBytes(hashFilePath));
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             System.out.println(hashFilePath + " doesn't exist. If it's the users table hash file, it will be created when a new user messages the bot. Thus assuming hash \"verification\" was correct.");
             return true;
         }
@@ -30,8 +27,7 @@ public class Hash
         return (hashFileContents.equals(file2Hash));
     }
 
-    public static void writeHashOfFileToFile(String fileToCalculatePath, String hashFilePath)
-    {
+    public static void writeHashOfFileToFile(String fileToCalculatePath, String hashFilePath) {
         byte[] hashFileContents;
         try {
             hashFileContents = readFileAsBytes(fileToCalculatePath);
@@ -43,16 +39,14 @@ public class Hash
         writeFile(hashToWrite, hashFilePath);
     }
 
-    private static byte[] readFileAsBytes(String filePath) throws IOException
-    {
+    private static byte[] readFileAsBytes(String filePath) throws IOException {
         var fileIn = new FileInputStream(filePath);
         byte[] fileContents = fileIn.readAllBytes();
         fileIn.close();
         return fileContents;
     }
 
-    private static void writeFile(String contentToWrite, String filePath)
-    {
+    private static void writeFile(String contentToWrite, String filePath) {
         try {
             var fileOut = new FileOutputStream(filePath);
             fileOut.write(contentToWrite.getBytes());
@@ -64,8 +58,7 @@ public class Hash
         System.out.println("WROTE: " + contentToWrite + " to " + filePath);
     }
 
-    private static String calculateNewHash(byte[] bytes)
-    {
+    private static String calculateNewHash(byte[] bytes) {
         String hash = null;
 
         try {

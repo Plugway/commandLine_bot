@@ -1,3 +1,3 @@
 public enum BotIOType {
-    Console, Telegram;
+    Console, Telegram
 }

@@ -24,7 +24,7 @@ public class Tests {
     */
 
     @Test
-    public void deserializationTest() throws IOException, ClassNotFoundException {
+    public void deserializationTest() throws DeserializationException, WrongHashException {
         UserTableSerialization.deserialize(Main.UsersPath);                  //failure if throws exception
     }
 
@@ -57,9 +57,9 @@ public class Tests {
                 "1");
 
         //i begrudgingly made the isAnswersRight() method public so i can test it, but i don't feel very good about it
-        Assert.assertTrue(QuizLogic.isAnswersRight(new int[] {1}, testQuestion.getRightAnswers()));
-        Assert.assertFalse(QuizLogic.isAnswersRight(new int[] {2}, testQuestion.getRightAnswers()));
-        Assert.assertFalse(QuizLogic.isAnswersRight(new int[] {3}, testQuestion.getRightAnswers()));
+        Assert.assertTrue(Question.isAnswersRight(new int[] {1}, testQuestion.getRightAnswers()));
+        Assert.assertFalse(Question.isAnswersRight(new int[] {2}, testQuestion.getRightAnswers()));
+        Assert.assertFalse(Question.isAnswersRight(new int[] {3}, testQuestion.getRightAnswers()));
     }
 
 
