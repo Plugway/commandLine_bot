@@ -1,5 +1,9 @@
-import java.sql.Struct;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class AdminPanel {
@@ -10,7 +14,7 @@ public class AdminPanel {
     private IO botIO = Main.botIO;
     public void run() throws InterruptedException {
         var exitFlag = true;
-        var mainMenuCommands="Доступные команды:\n1./find\n2./exit";
+        var mainMenuCommands="Доступные команды:\n1./find\n2./sendAll\n3./sleep\n4./exit";
         botIO.println("Добро пожаловать.\n" + mainMenuCommands, user.getChatId());
         while (exitFlag)
         {
@@ -21,12 +25,64 @@ public class AdminPanel {
                     runFindDial();
                     botIO.println("Вы в главном меню.\n" + mainMenuCommands, user.getChatId());
                     break;
+                case "/sendAll":
+                    runSendAllDial();
+                    botIO.println("Вы в главном меню.\n" + mainMenuCommands, user.getChatId());
+                    break;
+                case "/sleep":
+                    runSleepDial();
+                    botIO.println("Вы в главном меню.\n" + mainMenuCommands, user.getChatId());
+                    break;
                 case "/exit":
                     exitFlag=false;
                     break;
                 default:
                     botIO.println("Неверная команда.", user.getChatId());
             }
+        }
+    }
+    private void runSleepDial() throws InterruptedException {
+        botIO.println("Введите время сна в формате HH:mm:ss или /exit чтобы выйти.\nВнимание! Во время сна бот не будет отвечать!", user.getChatId());
+        long time;
+        while (true)
+        {
+            var input = botIO.readUserQuery(user);
+            if (input.equals("/exit"))
+                return;
+            try {
+                time = parseTimeToSleep(input);
+                break;
+            }
+            catch (ParseException e)
+            {
+                botIO.println("Неправильное время, повторите ввод.", user.getChatId());
+            }
+        }
+        botIO.removeListener();
+        Thread.sleep(time);
+        botIO.setListener();
+        botIO.println("Время сна вышло.", user.getChatId());
+    }
+    private long parseTimeToSleep(String time) throws ParseException {
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        Date dt = formatter.parse(time);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dt);
+        return ((cal.get(Calendar.HOUR)
+                *60+cal.get(Calendar.MINUTE))
+                *60+cal.get(Calendar.SECOND))*1000;
+    }
+    private void runSendAllDial() throws InterruptedException {
+        botIO.println("Введите сообщение для рассылки всем пользователям или /exit чтобы выйти.", user.getChatId());
+        var message = botIO.readUserQuery(user);
+        if (message.equals("/exit"))
+            return;
+        var users = UserTable.get();
+        for (User user1 : users)
+        {
+            if (user1.equals(user))
+                continue;
+            botIO.println(message, user1.getChatId());
         }
     }
     private void runFindDial() throws InterruptedException {

@@ -13,6 +13,9 @@ public class UserCommandHandler {
             case "/exit":
                 botIO.println("Куда выходить? Викторину ещё даже не начали :)", user.getChatId());
                 break;
+            case "/duel":
+                Duels.enterDuel(user, botIO);
+                break;
             case "/admin":
                 botIO.println("Введите ключ досупа:", user.getChatId());
                 var response = botIO.readUserQuery(user);

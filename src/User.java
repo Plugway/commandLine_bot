@@ -11,6 +11,9 @@ public class User implements Serializable {
         lastName = chat.lastName();
         chatId = chat.id();
         this.chat = chat;
+        duelId = 0;
+        highscore = 0;
+        duelQuestCount = 0;
     }
 
     public Queue<String> messages = new PriorityQueue<>();
@@ -20,6 +23,8 @@ public class User implements Serializable {
     private long chatId;
     private Chat chat;
     private int highscore;
+    private long duelId;
+    private int duelQuestCount;
 
     public long getChatId() {
         return chatId;
@@ -44,6 +49,14 @@ public class User implements Serializable {
     public int getHighscore() {
         return highscore;
     }
+
+    public long getDuelId(){ return duelId; }
+
+    public void setDuelId(long duelId){this.duelId = duelId;}
+
+    public void setDuelQuestCount(int duelQuestCount){this.duelQuestCount = duelQuestCount;}
+
+    public int getDuelQuestCount(){return duelQuestCount;}
 
     @Override
     public boolean equals(Object o) {

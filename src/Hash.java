@@ -59,7 +59,7 @@ public class Hash {
     }
 
     private static String calculateNewHash(byte[] bytes) {
-        String hash = null;
+        String hash;
 
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA1");

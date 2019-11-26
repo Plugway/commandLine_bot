@@ -1,19 +1,23 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 public class QuizLogic {
-    private static final String styleDelimiter = ")";
+    public static final String styleDelimiter = ")";
+    public static List<Question> questionsList;
 
     private static Random rnd = new Random(System.nanoTime());
-
     private static int getRandom(int min, int max) {
         return min + rnd.nextInt(max - min + 1);
     }
 
+    public static void parseQuestions(String questPath) throws IOException {
+        questionsList = Question.parseQuestions(questPath);
+    }
     public void runQuiz(User user, IO botIO) throws IOException, InterruptedException, SerializationException {
-        var questions = Question.parseQuestions(Main.QuestPath);
+        var questions = new ArrayList<>(questionsList);
         Collections.shuffle(questions, rnd);
 
         var currentQuestionNumber = 0;
@@ -21,6 +25,7 @@ public class QuizLogic {
         var questionsAskedQuantity = 0;
         var score = 0;
 
+        botIO.println("Сколько вопросов?", user.getChatId());
         var totalQuestionsToAsk = getTotalQuestionsToAsk(user, totalQuestionsAvailable, botIO);
 
         try {
@@ -64,8 +69,6 @@ public class QuizLogic {
                 UserCommandHandler.quizResolveCommand(input, user);
                 continue;
             }
-            //otherwise we are probably dealing with an answer
-
             try {
                 intInput = getIntInputArray(input);
                 return intInput;
@@ -75,15 +78,15 @@ public class QuizLogic {
         }
     }
 
-    private int getTotalQuestionsToAsk(User user, int totalQuestionsAvailable, IO botIO) {
-        botIO.println("Сколько вопросов? Общее число вопросов:" + totalQuestionsAvailable, user.getChatId());
+    public static int getTotalQuestionsToAsk(User user, int totalQuestionsAvailable, IO botIO) {
+        botIO.println("Общее число вопросов:" + totalQuestionsAvailable, user.getChatId());
         int totalQuestionsToAsk = 0;
         var inputIsGood = false;
         while (!inputIsGood) {
             try {
                 totalQuestionsToAsk = Integer.parseInt(botIO.readUserQuery(user));
                 var failNum = new String[]{
-                        "Возможно, тебе не стоит учавствовать в викторине, если у тебя этот вопрос вызывает затруднения...",
+                        "Возможно, тебе не стоит учавствовать в этом, если у тебя этот вопрос вызывает затруднения...",
                         "Число вопросов должно быть быть меньше " + totalQuestionsAvailable + " и больше 0."
                 };
                 if (totalQuestionsToAsk <= totalQuestionsAvailable && totalQuestionsToAsk > 0) {
@@ -91,13 +94,13 @@ public class QuizLogic {
                 } else
                     botIO.println(failNum[getRandom(0, failNum.length - 1)], user.getChatId());
             } catch (Exception e) {
-                botIO.println("Введите натуральное число больше 0 и меньше либо равно 143.", user.getChatId());
+                botIO.println("Введите натуральное число больше 0 и меньше либо равно " + totalQuestionsAvailable + ".", user.getChatId());
             }
         }
         return totalQuestionsToAsk;
     }
 
-    private static int[] getIntInputArray(String input) throws Exception {
+    public static int[] getIntInputArray(String input) throws Exception {
         var numinput = input.replaceAll(" ", "").split(",");
         var intInput = new int[numinput.length];
         for (String s : numinput)

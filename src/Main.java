@@ -10,10 +10,11 @@ public class Main {
     public static String ApiKey = getApiKey();
     public static final BotIOType botMode = BotIOType.Telegram;
     public static IO botIO;
-    public static void main(String[] args) throws DeserializationException, SerializationException, WrongHashException {
+    public static void main(String[] args) throws DeserializationException, SerializationException, WrongHashException, IOException {
 
         botIO = BotIOFactory.getBotIO(botMode);
         UserTable.setTable(UserTableSerialization.deserialize(UsersPath));
+        QuizLogic.parseQuestions(QuestPath);
 
         Logic.initializeAllUserThreads();
 
