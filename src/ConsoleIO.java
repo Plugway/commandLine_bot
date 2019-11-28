@@ -8,7 +8,7 @@ public class ConsoleIO implements IO {
     }
 
     @Override
-    public String[] readUsersQueries(User user1, User user2) throws InterruptedException, DuelInterruptedException {
+    public String[] readDuelUsersQueries(User user1, User user2) throws InterruptedException, DuelInterruptedException {
         return new String[0];
     }
 

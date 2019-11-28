@@ -4,7 +4,8 @@ import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Hash {
+public class Hash
+{
     public static boolean verifyHashFileAgainst(String hashFilePath, String file2Path) {
         byte[] file2Contents;
         try {
@@ -68,9 +69,6 @@ public class Hash {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Failed to calculate a hash.");
         }
-
-        if (hash == null)
-            throw new NullPointerException("Failed to calculate a hash.");
 
         return hash;
     }

@@ -1,9 +1,10 @@
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Queue;
 
 public class TelegramIO implements IO {
     private TelegramBot bot = new TelegramBot(Main.ApiKey);
@@ -48,56 +49,46 @@ public class TelegramIO implements IO {
         System.out.println("Выслано юзерам с chatId " + chatId1 + " и " + chatId2 + ":\n" + response);
     }
 
-    public String[] readUsersQueries(User user1, User user2) throws InterruptedException, DuelInterruptedException {
+    public String[] readDuelUsersQueries(User user1, User user2) throws InterruptedException, DuelInterruptedException
+    {
         var input = new String[2];
         while (user1.messages.size() == 0 && user2.messages.size() == 0) {
             Thread.sleep(1000);
         }
-        var user1Input = user1.messages;
-        var user2Input = user2.messages;
-        if (user1Input.size() == 0)
-        {
-            input[1] = user2Input.poll();
-            println("Ожидаем противника.", user2.getChatId());
-            println("Ваш противник уже ответил. Поторопитесь :)", user1.getChatId());
-            while (user1Input.size() == 0)
-            {
-                if (user2Input.size() != 0)
-                {
-                    if (user2Input.poll().equals("/exit"))
-                        throw new DuelInterruptedException("timeout,2");
-                    else
-                    {
-                        println("Подождите еще немного, либо напишите /exit для того чтобы сдаться.", user2.getChatId());
-                        println("Ваш противник негодует. Думайте быстрее!", user1.getChatId());
-                    }
-                }
-                Thread.sleep(1000);
-            }
-            input[0] = user1Input.poll();
-        }
+
+        var userInput = new ArrayList<Queue<String>>();
+        userInput.set(0, user1.messages);
+        userInput.set(1, user1.messages);
+        if (userInput.get(0).size() == 0)
+            handleDuelUserInput(user1, user2, userInput, input, 0);
         else
-        {
-            input[0] = user1Input.poll();
-            println("Ожидаем противника.", user1.getChatId());
-            println("Ваш противник уже ответил. Поторопитесь :)", user2.getChatId());
-            while (user2Input.size() == 0)
-            {
-                if (user1Input.size() != 0)
-                {
-                    if (user1Input.poll().equals("/exit"))
-                        throw new DuelInterruptedException("timeout,1");
-                    else
-                    {
-                        println("Подождите еще немного, либо напишите /exit для того чтобы сдаться.", user1.getChatId());
-                        println("Ваш противник негодует. Думайте быстрее!", user2.getChatId());
-                    }
-                }
-                Thread.sleep(1000);
-            }
-            input[1] = user2Input.poll();
-        }
-        System.out.println("Ввод от юзера с chatId " + user1.getChatId() + ":\n" + input[0]+"и ввод от юзера с chatId " + user2.getChatId() + ":\n" + input[1]);
+            handleDuelUserInput(user1, user2, userInput, input, 1);
+
+        System.out.println("Ввод от юзера с chatId " + user1.getChatId() + ":\n" + input[0]+"\nи ввод от юзера с chatId " + user2.getChatId() + ":\n" + input[1]);
         return input;
+    }
+
+    private void handleDuelUserInput(User user1, User user2, ArrayList<Queue<String>> userInput, String[] input, int whichUsr) throws InterruptedException, DuelInterruptedException
+    {
+        int otherUsr = whichUsr == 0? 1: 0;
+
+        input[otherUsr] = userInput.get(otherUsr).poll();
+        println("Ожидаем противника.", user2.getChatId());
+        println("Ваш противник уже ответил. Поторопитесь :)", user1.getChatId());
+        while (userInput.get(whichUsr).size() == 0)
+        {
+            if (userInput.get(otherUsr).size() != 0)
+            {
+                if (Objects.requireNonNull(userInput.get(otherUsr).poll()).equals("/exit"))
+                    throw new DuelInterruptedException("timeout," + (otherUsr+1));
+                else
+                {
+                    println("Подождите еще немного, либо напишите /exit для того чтобы сдаться.", user2.getChatId());
+                    println("Ваш противник негодует. Думайте быстрее!", user1.getChatId());
+                }
+            }
+            Thread.sleep(1000);
+        }
+        input[whichUsr] = userInput.get(whichUsr).poll();
     }
 }

@@ -6,18 +6,14 @@ import java.util.Random;
 
 public class QuizLogic {
     public static final String styleDelimiter = ")";
-    public static List<Question> questionsList;
 
     private static Random rnd = new Random(System.nanoTime());
     private static int getRandom(int min, int max) {
         return min + rnd.nextInt(max - min + 1);
     }
 
-    public static void parseQuestions(String questPath) throws IOException {
-        questionsList = Question.parseQuestions(questPath);
-    }
     public void runQuiz(User user, IO botIO) throws IOException, InterruptedException, SerializationException {
-        var questions = new ArrayList<>(questionsList);
+        var questions = new ArrayList<>(Question.questionsList);
         Collections.shuffle(questions, rnd);
 
         var currentQuestionNumber = 0;

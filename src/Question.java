@@ -37,12 +37,16 @@ public class Question {
         this.mAsked = !mAsked;
     }
 
-    public static List<Question> parseQuestions(String path) throws IOException {
+    public static List<Question> questionsList;
+
+    public static void parseQuestions(String path) throws IOException
+    {
         var questions = Files.readString(Paths.get(path), StandardCharsets.UTF_8).
                 replaceAll("\r\n", "").split("]");
-        return Stream.of(questions)
+        var list = Stream.of(questions)
                 .map(Question::generateQuestion)
                 .collect(Collectors.toList());
+        questionsList = list;
     }
 
     public static Question generateQuestion(String question) {

@@ -14,7 +14,7 @@ public class Main {
 
         botIO = BotIOFactory.getBotIO(botMode);
         UserTable.setTable(UserTableSerialization.deserialize(UsersPath));
-        QuizLogic.parseQuestions(QuestPath);
+        Question.parseQuestions(QuestPath);
 
         Logic.initializeAllUserThreads();
 

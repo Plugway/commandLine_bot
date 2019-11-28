@@ -23,7 +23,7 @@ public class UserCommandHandler {
                     new AdminPanel(user).run();
                 break;
             case "/top":
-                botIO.println(UserTable.getHighscoreTable(user), user.getChatId());
+                botIO.println(Highscore.generateTable(user), user.getChatId());
                 break;
             default:
                 botIO.println("Я не знаю такой команды.", user.getChatId());
@@ -43,6 +43,32 @@ public class UserCommandHandler {
                 throw new QuizShouldFinishException();
             case "/top":
                 botIO.println("Чтобы увидеть рекорды, завершите викторину.", user.getChatId());
+                break;
+            case "/duel":
+                botIO.println("Чтобы войти в лобби, сначала завершите викторину.", user.getChatId());
+                break;
+            default:
+                botIO.println("Я не знаю такой команды.", user.getChatId());
+        }
+    }
+
+    public static void preDuelResolveCommand(String command, User user)
+    {
+        var botIO = Main.botIO;
+        switch (command) {
+            case "/start":
+                botIO.println("Вы не можете начать викторину, пока находитесь в лобби.", user.getChatId());
+                break;
+            case "/help":
+                botIO.println("Ждём, когда найдётся противник.", user.getChatId());
+                break;
+            //case "/exit":
+                //throw new ExitingLobbyException();
+            case "/top":
+                botIO.println("Вы не можете смотреть рекорды, пока находитесь в лобби.", user.getChatId());
+                break;
+            case "/duel":
+                botIO.println("Вы уже находитесь в лобби.", user.getChatId());
                 break;
             default:
                 botIO.println("Я не знаю такой команды.", user.getChatId());

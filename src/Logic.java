@@ -8,11 +8,12 @@ public class Logic {
         this.botIO = Main.botIO;
     }
 
-    private static String helpText = "Привет, я бот, вот что я умею:\n" +
-            "1. Задавать вопросики, на которые тебе нужно ответить.\n\n" +
+    private static String helpText = "Привет, я бот-викторина. Я умею задавать вопросики, а ты, может быть, умеешь на них отвечать :)\n\n" +
             "Чтобы начать, напиши /start\n" +
-            "Для вызова помощи напиши /help\n" +
-            "Чтобы выйти во время викторины напиши /exit";
+            "Чтобы вызвать помощь, напиши /help\n" +
+            "Чтобы посмотреть рекорды, напиши /top\n" +
+            "Чтобы войти в лобби для игры с другим пользователем, напиши /duel\n" +
+            "Чтобы выйти во время викторины, напиши /exit";
 
     private static long adminChatId = 0;
     private static long adminWantId = 0;
@@ -49,7 +50,6 @@ public class Logic {
                 botIO.println(userInput, adminChatId);
             else
                 UserCommandHandler.preQuizResolveCommand(userInput, user);
-            //UserCommandHandler.preQuizResolveCommand(botIO.readUserQuery(user), user);
         }
     }
 }
