@@ -11,9 +11,10 @@ public class UserTableSerialization {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static List<User> deserialize(String filePath) throws DeserializationException, WrongHashException {
         List<User> resultAsList;
-        Object resultAsObject = null;
+        Object resultAsObject;
 
         if (!Hash.verifyHashFileAgainst(Main.UsersHashPath, Main.UsersPath))
             throw new WrongHashException("The Users file is broken, hash doesn't match.");

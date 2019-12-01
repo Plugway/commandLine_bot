@@ -1,13 +1,17 @@
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 
 public class TelegramIO implements IO {
-    private TelegramBot bot = new TelegramBot(Main.ApiKey);
+    private TelegramBot bot = new TelegramBot(getApiKey());
 
     public TelegramIO() {
         setListener();
@@ -21,7 +25,7 @@ public class TelegramIO implements IO {
     {
         bot.setUpdatesListener(updates -> {
             try {
-                return (int) UpdatesHandler.handleUpdates(updates, Main.botIO);
+                return (int) UpdatesHandler.handleUpdates(updates);
             } catch (SerializationException e) {
                 e.printStackTrace();
             }
@@ -90,5 +94,13 @@ public class TelegramIO implements IO {
             Thread.sleep(1000);
         }
         input[whichUsr] = userInput.get(whichUsr).poll();
+    }
+    public static String getApiKey() {
+        String apiKeyPath = Main.ApiKeyPath;
+        try {
+            return Files.readString(Paths.get(apiKeyPath), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new Error("Can't read api key from " + apiKeyPath);
+        }
     }
 }

@@ -3,12 +3,12 @@ import com.pengrad.telegrambot.model.Update;
 import java.util.List;
 
 public class UpdatesHandler {
-    public static long handleUpdates(List<Update> updates, IO botIO) throws SerializationException {
+    public static long handleUpdates(List<Update> updates) throws SerializationException {
         var update = updates.get(0);
         if (update.message() == null)
             return update.updateId();
         var chat = update.message().chat();
-        var user = UserTable.getUserById(chat);
+        var user = UserTable.getUserById(chat.id());
         if (user != null) {
             if (update.message().text() != null)
                 user.messages.add(update.message().text());

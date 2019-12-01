@@ -1,6 +1,4 @@
 .idea/*
 libs/
 out/
-src/api.txt
-src/users.txt
-src/usersHash.txt
+data/

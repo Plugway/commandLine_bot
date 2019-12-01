@@ -14,11 +14,8 @@ public class Highscore
         builder.append("Таблица рекордов:\n");
         for (var i = 0; i < linesToPrint; i++) {
             var usr = highscores.get(i);
-            appendMedal(builder, i+1);
-            appendUserInfo(builder, usr);
-            builder.append(" - ").append(usr.getHighscore()).append("\n");
+            builder.append(printPlace(i+1)).append(usr.getToPrint()).append("\n");
         }
-
         appendUserPlace(builder, user, highscores);
         return builder.toString();
     }
@@ -31,30 +28,18 @@ public class Highscore
                 .collect(Collectors.toList());
     }
 
-    private static void appendMedal(StringBuilder builder, int place)
+    private static String printPlace(int place)
     {
         switch (place) {
             case 1:
-                builder.append("\uD83E\uDD47");
-                break;
+                return "\uD83E\uDD47";
             case 2:
-                builder.append("\uD83E\uDD48");
-                break;
+                return "\uD83E\uDD48";
             case 3:
-                builder.append("\uD83E\uDD49");
-                break;
+                return "\uD83E\uDD49";
             default:
-                builder.append(place).append(".");
+                return place + ".";
         }
-    }
-
-    private static void appendUserInfo(StringBuilder builder, User usr)
-    {
-        builder.append(" ").append(usr.getFirstName());
-        if (usr.getLastName() != null)
-            builder.append(" ").append(usr.getLastName());
-        if (usr.getUsername() != null)
-            builder.append("(@").append(usr.getUsername()).append(")");
     }
 
     private static void appendUserPlace(StringBuilder builder, User user, List<User> highscores)

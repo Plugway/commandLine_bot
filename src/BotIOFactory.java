@@ -1,5 +1,5 @@
 public class BotIOFactory {
-    public static IO getBotIO(BotIOType botIOType) throws SerializationException {
+    public static IO getBotIO(BotIOType botIOType) {
         if (botIOType == BotIOType.Console) {
             return new ConsoleIO();
         } else if (botIOType == BotIOType.Telegram) {

@@ -1,10 +1,17 @@
 import com.pengrad.telegrambot.model.Chat;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserTable {
+
+    public UserTable(List<User> userTable)
+    {
+        UserTable.userTable = userTable;
+    }
+
     private static List<User> userTable;
 
     public static List<User> get() {
@@ -23,18 +30,11 @@ public class UserTable {
         return userTable.contains(user);
     }
 
-    public static User getUserById(Chat chat) {
-        var user = new User(chat);
-        var index = userTable.indexOf(user);
-        if (index == -1) {
-            return null;
-        } else {
-            return userTable.get(index);
-        }
-    }
-
-    public static synchronized void setTable(List<User> newUserTable) {
-        userTable = newUserTable;
+    public static User getUserById(long id) {
+        return userTable.stream()
+                .filter(u -> u.getChatId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
     public static synchronized void setUser(int index, User user) {
@@ -46,18 +46,46 @@ public class UserTable {
     }
 
     public static List<User> getUsersByUsername(String username) {
-        return userTable.stream().filter(u -> u.getUsername().equals(username)).collect(Collectors.toList());
+        return userTable.stream()
+                .filter(u -> u.getUsername().equals(username))
+                .collect(Collectors.toList());
     }
 
     public static List<User> getUsersByFirstname(String firstname) {
-        return userTable.stream().filter(u -> u.getFirstName().equals(firstname)).collect(Collectors.toList());
+        return userTable.stream()
+                .filter(u -> u.getFirstName().equals(firstname))
+                .collect(Collectors.toList());
     }
 
     public static List<User> getUsersByLastname(String lastname) {
-        return userTable.stream().filter(u -> u.getLastName().equals(lastname)).collect(Collectors.toList());
+        return userTable.stream()
+                .filter(u -> u.getLastName().equals(lastname))
+                .collect(Collectors.toList());
     }
 
     public static List<User> getUsersByHighscore(String highscore) {
-        return userTable.stream().filter(u -> Integer.toString(u.getHighscore()).equals(highscore)).collect(Collectors.toList());
+        return userTable.stream()
+                .filter(u -> Integer.toString(u.getHighscore()).equals(highscore))
+                .collect(Collectors.toList());
+    }
+    public static List<User> getUsersByType(FindTypes type, String query)
+    {
+        switch (type)
+        {
+            case chatId:
+                var resultList=new ArrayList<User>();
+                resultList.add(UserTable.getUserById(Long.parseLong(query)));
+                return resultList;
+            case firstname:
+                return UserTable.getUsersByFirstname(query);
+            case lastname:
+                return UserTable.getUsersByLastname(query);
+            case username:
+                return UserTable.getUsersByUsername(query);
+            case highscore:
+                return UserTable.getUsersByHighscore(query);
+            default:
+                return new ArrayList<>();
+        }
     }
 }

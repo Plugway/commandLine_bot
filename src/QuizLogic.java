@@ -90,7 +90,7 @@ public class QuizLogic {
                 } else
                     botIO.println(failNum[getRandom(0, failNum.length - 1)], user.getChatId());
             } catch (Exception e) {
-                botIO.println("Введите натуральное число больше 0 и меньше либо равно " + totalQuestionsAvailable + ".", user.getChatId());
+                botIO.println("Введите натуральное число, которое больше 0 и меньше либо равно " + totalQuestionsAvailable + ".", user.getChatId());
             }
         }
         return totalQuestionsToAsk;

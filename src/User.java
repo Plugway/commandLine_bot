@@ -1,8 +1,10 @@
 import com.pengrad.telegrambot.model.Chat;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 public class User implements Serializable {
     public User(Chat chat) {
@@ -58,6 +60,32 @@ public class User implements Serializable {
 
     public int getDuelQuestCount(){return duelQuestCount;}
 
+    public String getDetalizedToPrint()
+    {
+        return "Информация:\n" +
+                "Firstname: " + this.firstName + "\n" +
+                "Lastname: " + this.lastName + "\n" +
+                "Username: @" + this.username + "\n" +
+                "ChatId: " + this.chatId + "\n" +
+                "Highscore: " + this.highscore;
+    }
+    public String getToPrint()
+    {
+        var builder = new StringBuilder();
+        builder.append(this.firstName);
+        if (this.lastName != null)
+            builder.append(" ").append(this.lastName);
+        if (this.username != null)
+            builder.append("(@").append(this.username).append(")");
+        builder.append(" - ").append(this.highscore);
+        return builder.toString();
+    }
+    public static String getListToPrint(List<User> users){
+        return "Найдено:\n"+
+                users.stream()
+                        .map(u -> (users.indexOf(u)+1)+". "+u.getToPrint())
+                        .collect(Collectors.joining("\n"));
+    }
     @Override
     public boolean equals(Object o) {
         try {
