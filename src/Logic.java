@@ -15,6 +15,7 @@ public class Logic {
             "Чтобы войти в лобби для игры с другим пользователем, напиши /duel\n" +
             "Чтобы выйти во время викторины, напиши /exit";
 
+    /*
     private static long adminChatId = 0;
     private static long adminWantId = 0;
 
@@ -22,6 +23,7 @@ public class Logic {
         adminChatId = adminChat;
         adminWantId = adminWant;
     }
+     */
 
     public static String getHelpText() {
         return helpText;
@@ -46,9 +48,10 @@ public class Logic {
     public void resumeUserInteraction() throws IOException, InterruptedException, SerializationException {
         while (true) {
             var userInput = botIO.readUserQuery(user);
+            /*
             if (adminChatId != 0 && adminWantId == chatId)
                 botIO.println(userInput, adminChatId);
-            else
+            else*/
                 UserCommandHandler.preQuizResolveCommand(userInput, user);
         }
     }

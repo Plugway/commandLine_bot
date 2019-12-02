@@ -173,10 +173,12 @@ public class AdminPanel {
             var input = botIO.readUserQuery(user);
             switch (input)
             {
+                /*
                 case "/talk":
                     dialogueWUser(gettedUser);
                     printHelpText(MenuHelpText.adminInteractUser);
                     break;
+                 */
                 case "/exit":
                     return;
                 default:
@@ -184,6 +186,8 @@ public class AdminPanel {
             }
         }
     }
+
+    /*
     private void dialogueWUser(User gettedUser) throws InterruptedException {
         botIO.println("Для выхода из диалога напишите /exit.", user.getChatId());
         Logic.setAdminId(user.getChatId(), gettedUser.getChatId());
@@ -199,4 +203,5 @@ public class AdminPanel {
                 botIO.println(input, gettedUser.getChatId());
         }
     }
+     */
 }
