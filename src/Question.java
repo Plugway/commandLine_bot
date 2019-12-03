@@ -42,7 +42,7 @@ public class Question {
     public static void parseQuestions(String path) throws IOException
     {
         var questions = Files.readString(Paths.get(path), StandardCharsets.UTF_8).
-                replaceAll("\r\n", "").split("]");
+                replaceAll("\n", "").replaceAll("\r", "").split("]");
         var list = Stream.of(questions)
                 .map(Question::generateQuestion)
                 .collect(Collectors.toList());

@@ -2,5 +2,7 @@
 libs/
 out/
 data/api.txt
+
 data/users.txt
+
 data/usersHash.txt

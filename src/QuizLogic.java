@@ -75,7 +75,7 @@ public class QuizLogic {
     }
 
     public static int getTotalQuestionsToAsk(User user, int totalQuestionsAvailable, IO botIO) {
-        botIO.println("Общее число вопросов:" + totalQuestionsAvailable, user.getChatId());
+        botIO.println("Общее число вопросов: " + totalQuestionsAvailable, user.getChatId());
         int totalQuestionsToAsk = 0;
         var inputIsGood = false;
         while (!inputIsGood) {
