@@ -29,18 +29,20 @@ public class QuizLogic {
                 var currentQuestion = questions.get(currentQuestionNumber);
 
                 botIO.println((currentQuestionNumber + 1) + styleDelimiter + currentQuestion.getQuestionText(), user.getChatId());         //печатаем вопрос
-                for (var i = 0; i < currentQuestion.getAnswers().size(); i++)                                       //печатаем ответы
-                    botIO.println(currentQuestion.getAnswers().get(i), user.getChatId());
-
-                var intInput = handleUserQuizInput(user, botIO);
-                if (Question.isAnswersRight(intInput, currentQuestion.getRightAnswers())) {
-                    botIO.println("Верно!", user.getChatId());
-                    score++;
-                } else
-                    botIO.println("Неверно :(", user.getChatId());
-
+                if (currentQuestion instanceof NumQuestion)
+                {
+                    var currentNumQuestion = (NumQuestion)currentQuestion;
+                    for (var i = 0; i < (currentNumQuestion).getAnswers().size(); i++)                                       //печатаем ответы
+                        botIO.println((currentNumQuestion).getAnswers().get(i), user.getChatId());
+                    var intInput = handleIntUserQuizInput(user, botIO);
+                    score += getScoreAdd(currentNumQuestion.assertAnswers(intInput), user, botIO);
+                }
+                else if (currentQuestion instanceof WordQuestion)
+                {
+                    var currentWordQuestion = (WordQuestion)currentQuestion;
+                    score += getScoreAdd(currentWordQuestion.assertAnswer(handleStrUserQuizInput(user, botIO)), user, botIO);
+                }
                 questionsAskedQuantity++;
-
                 if (currentQuestionNumber == totalQuestionsToAsk - 1)
                     throw new QuizShouldFinishException();
             }
@@ -57,7 +59,28 @@ public class QuizLogic {
         }
     }
 
-    private int[] handleUserQuizInput(User user, IO botIO) throws InterruptedException, IOException, QuizShouldFinishException {
+    private int getScoreAdd(boolean ansRight, User user, IO botIO)
+    {
+        if (ansRight) {
+            botIO.println("Верно!", user.getChatId());
+            return 1;
+        } else
+        {
+            botIO.println("Неверно :(", user.getChatId());
+            return 0;
+        }
+    }
+    private String handleStrUserQuizInput(User user, IO botIO) throws InterruptedException, QuizShouldFinishException {
+        while (true) {
+            var input = botIO.readUserQuery(user);
+            if (input.substring(0, 1).equals("/")) {
+                UserCommandHandler.quizResolveCommand(input, user);
+                continue;
+            }
+            return input;
+        }
+    }
+    private int[] handleIntUserQuizInput(User user, IO botIO) throws InterruptedException, QuizShouldFinishException {
         int[] intInput;
         while (true) {
             var input = botIO.readUserQuery(user);

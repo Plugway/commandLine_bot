@@ -57,24 +57,24 @@ public class Duels extends QuizLogic {
                 botIO.println((currentQuestionNumber + 1) + styleDelimiter + currentQuestion.getQuestionText(),
                         user1Id,
                         user2Id);         //печатаем вопрос
-                for (var i = 0; i < currentQuestion.getAnswers().size(); i++)                                       //печатаем ответы
+                if (currentQuestion instanceof NumQuestion)
                 {
-                    botIO.println(currentQuestion.getAnswers().get(i), user1Id, user2Id);
+                    var currentNumQuestion = (NumQuestion)currentQuestion;
+                    for (var i = 0; i < currentNumQuestion.getAnswers().size(); i++)                                       //печатаем ответы
+                    {
+                        botIO.println(currentNumQuestion.getAnswers().get(i), user1Id, user2Id);
+                    }
+                    var intInput = handleIntUsersDuelInput(user1, user2, botIO);
+                    score1 += getScoreAdd(currentNumQuestion.assertAnswers(intInput[0]), user1);
+                    score2 += getScoreAdd(currentNumQuestion.assertAnswers(intInput[1]), user2);
                 }
-
-                var intInput = handleUsersDuelInput(user1, user2, botIO);
-
-                if (Question.isAnswersRight(intInput[0], currentQuestion.getRightAnswers())) {
-                    botIO.println("Верно!", user1Id);
-                    score1++;
-                } else
-                    botIO.println("Неверно :(", user1Id);
-                if (Question.isAnswersRight(intInput[1], currentQuestion.getRightAnswers())) {
-                    botIO.println("Верно!", user2Id);
-                    score2++;
-                } else
-                    botIO.println("Неверно :(", user2Id);
-
+                else if (currentQuestion instanceof WordQuestion)
+                {
+                    var currentWordQuestion = (WordQuestion)currentQuestion;
+                    var input = handleStrUsersDuelInput(user1, user2, botIO);
+                    score1 += getScoreAdd(currentWordQuestion.assertAnswer(input[0]), user1);
+                    score2 += getScoreAdd(currentWordQuestion.assertAnswer(input[1]), user2);
+                }
                 questionsAskedQuantity++;
                 if (currentQuestionNumber == questNum - 1)
                     throw new DuelShouldFinishException();
@@ -88,6 +88,18 @@ public class Duels extends QuizLogic {
         user2.setDuelId(0);
         user1.setDuelQuestCount(0);
         user2.setDuelQuestCount(0);
+    }
+
+    private int getScoreAdd(boolean ansRight, User user)
+    {
+        if (ansRight) {
+            botIO.println("Верно!", user.getChatId());
+            return 1;
+        } else
+        {
+            botIO.println("Неверно :(", user.getChatId());
+            return 0;
+        }
     }
 
     private void printResultsDuelFinished(int score1, int score2, int questionsAskedQuantity)
@@ -152,7 +164,7 @@ public class Duels extends QuizLogic {
         }
     }
 
-    private int[][] handleUsersDuelInput(User user1, User user2, IO botIO) throws InterruptedException, DuelInterruptedException {
+    private int[][] handleIntUsersDuelInput(User user1, User user2, IO botIO) throws InterruptedException, DuelInterruptedException {
         int[][] intInput = new int[2][];
         while (true) {
             var input = botIO.readDuelUsersQueries(user1, user2);
@@ -166,6 +178,20 @@ public class Duels extends QuizLogic {
             intInput[0] = getIntInpArray(input[0]);
             intInput[1] = getIntInpArray(input[1]);
             return intInput;
+        }
+    }
+
+    private String[] handleStrUsersDuelInput(User user1, User user2, IO botIO) throws InterruptedException, DuelInterruptedException {
+        while (true) {
+            var input = botIO.readDuelUsersQueries(user1, user2);
+            if (input[0].equals("/exit")) {
+                throw new DuelInterruptedException("desire,1");
+            }
+            if (input[1].equals("/exit"))
+            {
+                throw new DuelInterruptedException("desire,2");
+            }
+            return input;
         }
     }
 

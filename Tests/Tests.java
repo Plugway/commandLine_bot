@@ -17,6 +17,7 @@ public class Tests {
         Hash.verifyHashFileAgainst("Tests/testUsersHash.txt", "Tests/testUsers.txt");      //failure if throws exception
     }
 
+    /*
     @Test
     public void correctAnswerTest() {
         int[] userInput = {1, 2};
@@ -37,7 +38,7 @@ public class Tests {
         List<Integer> rightInput = Arrays.asList(1, 2);
         Assert.assertFalse(Question.isAnswersRight(userInput, rightInput));
     }
-
+*/
     @Test
     public void questionToggleTest() {
         var question = new Question();
@@ -45,7 +46,7 @@ public class Tests {
         question.toggleAsked();
         Assert.assertTrue(question.getAsked());
     }
-
+/*
     @Test
     public void questionGenerationTest() {
         var testQuestion = Question.generateQuestion("What does the WINE acronym mean?\n" +
@@ -60,7 +61,7 @@ public class Tests {
         Assert.assertFalse(Question.isAnswersRight(new int[] {2}, testQuestion.getRightAnswers()));
         Assert.assertFalse(Question.isAnswersRight(new int[] {3}, testQuestion.getRightAnswers()));
     }
-
+*/
     @Test
     public void highscoreTableTest() throws IOException, ClassNotFoundException, DeserializationException, WrongHashException {
         User user = (User)ObjectSerialization.deserialize("Tests/testUser.txt");
