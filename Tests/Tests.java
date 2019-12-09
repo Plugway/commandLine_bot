@@ -65,7 +65,7 @@ public class Tests {
     @Test
     public void highscoreTableTest() throws IOException, ClassNotFoundException, DeserializationException, WrongHashException {
         User user = (User)ObjectSerialization.deserialize("Tests/testUser.txt");
-        user.setHighscore(100);
+        user.getStats().setHighscore(100, user, Main.botIO);
         new UserTable(UserTableSerialization.deserialize("Tests/testUsers.txt"));
         String table = Highscore.generateTable(user);
         Assert.assertEquals("Таблица рекордов:", table.substring(0, 17));
@@ -94,7 +94,7 @@ public class Tests {
     public void gettingUserByTypeTest() throws IOException, ClassNotFoundException, DeserializationException, WrongHashException {
         User user = (User)ObjectSerialization.deserialize("Tests/testUser.txt");
         new UserTable(UserTableSerialization.deserialize("Tests/testUsers.txt"));
-        user.setHighscore(1);
+        user.getStats().setHighscore(1, user, Main.botIO);
 
         List<User> resultHighscore = UserTable.getUsersByType(FindTypes.highscore, "1");
         Assert.assertTrue(resultHighscore.contains(user));

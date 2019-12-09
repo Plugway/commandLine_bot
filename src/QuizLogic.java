@@ -43,6 +43,7 @@ public class QuizLogic {
                     score += getScoreAdd(currentWordQuestion.assertAnswer(handleStrUserQuizInput(user, botIO)), user, botIO);
                 }
                 questionsAskedQuantity++;
+                user.getStats().addQuestionsCount(user, botIO);
                 if (currentQuestionNumber == totalQuestionsToAsk - 1)
                     throw new QuizShouldFinishException();
             }
@@ -52,7 +53,8 @@ public class QuizLogic {
             //Highscore.checkScore(user, botIO, score);
             if (user.getHighscore() < score) {
                 botIO.println("Новый рекорд\uD83C\uDF89", user.getChatId());
-                user.setHighscore(score);
+                user.getStats().addQuizHighscoreHitCount(user, botIO);
+                user.getStats().setHighscore(score, user, botIO);
                 UserTableSerialization.serialize(UserTable.get(), Main.UsersPath);
                 Hash.writeHashOfFileToFile(Main.UsersPath, Main.UsersHashPath);
             }
@@ -63,6 +65,7 @@ public class QuizLogic {
     {
         if (ansRight) {
             botIO.println("Верно!", user.getChatId());
+            user.getStats().addRightQuestionsCount(user, botIO);
             return 1;
         } else
         {

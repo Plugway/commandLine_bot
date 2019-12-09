@@ -1,6 +1,7 @@
 import com.pengrad.telegrambot.model.Chat;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -14,7 +15,6 @@ public class User implements Serializable {
         chatId = chat.id();
         this.chat = chat;
         duelId = 0;
-        highscore = 0;
         duelQuestCount = 0;
     }
 
@@ -24,13 +24,20 @@ public class User implements Serializable {
     private String lastName;
     private long chatId;
     private Chat chat;
-    private int highscore;
     private long duelId;
     private int duelQuestCount;
+    private Stats stats = new Stats();
+    private List<Achievement> achievements = new ArrayList<>();
 
     public long getChatId() {
         return chatId;
     }
+
+    public Stats getStats(){return stats;}
+
+    public void addAchievement(Achievement achievement){achievements.add(achievement);}
+
+    public int getHighscore(){return stats.getHighscore();}
 
     public String getUsername() {
         return username;
@@ -44,14 +51,6 @@ public class User implements Serializable {
         return lastName;
     }
 
-    public void setHighscore(int highscore) {
-        this.highscore = highscore;
-    }
-
-    public int getHighscore() {
-        return highscore;
-    }
-
     public long getDuelId(){ return duelId; }
 
     public void setDuelId(long duelId){this.duelId = duelId;}
@@ -60,6 +59,20 @@ public class User implements Serializable {
 
     public int getDuelQuestCount(){return duelQuestCount;}
 
+    public List<Achievement> getAchievements(){return achievements;}
+
+    public String getAchievementsListToPrint()
+    {
+        if (achievements.size() == 0)
+            return "У вас пока что нет достижений.";
+        var sb = new StringBuilder();
+        for (var i = 0; i < achievements.size(); i++)
+        {
+            sb.append(i + 1).append(". ").append(achievements.get(i).toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
     public String getDetalizedToPrint()
     {
         return "Информация:\n" +
@@ -67,7 +80,7 @@ public class User implements Serializable {
                 "Lastname: " + this.lastName + "\n" +
                 "Username: @" + this.username + "\n" +
                 "ChatId: " + this.chatId + "\n" +
-                "Highscore: " + this.highscore;
+                "Highscore: " + this.stats.getHighscore();
     }
     public String getToPrint()
     {
@@ -77,7 +90,7 @@ public class User implements Serializable {
             builder.append(" ").append(this.lastName);
         if (this.username != null)
             builder.append("(@").append(this.username).append(")");
-        builder.append(" - ").append(this.highscore);
+        builder.append(" - ").append(this.stats.getHighscore());
         return builder.toString();
     }
     public static String getListToPrint(List<User> users){

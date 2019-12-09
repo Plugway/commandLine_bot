@@ -82,6 +82,8 @@ public class Duels extends QuizLogic {
         } catch (DuelShouldFinishException | InterruptedException e) {
             printResultsDuelFinished(score1, score2, questionsAskedQuantity);
         } catch (DuelInterruptedException e) {
+            user1.getStats().addDuelCount(user1, botIO);
+            user2.getStats().addDuelCount(user2, botIO);
             printResultsDuelInterrupted(score1, score2, e);
         }
         user1.setDuelId(0);
@@ -206,7 +208,9 @@ public class Duels extends QuizLogic {
 
     private void printDuelResult(User user1, User user2, int score1, int score2)
     {
+        user1.getStats().addDuelLostCount(user1, botIO);
         botIO.println("Ты проиграл! Твой счет: "+score1+", счет противника: "+score2, user1.getChatId());
+        user2.getStats().addDuelWinsCount(user2, botIO);
         botIO.println("Ты выиграл! Твой счет: "+score2+", счет противника: "+score1, user2.getChatId());
     }
 
@@ -215,7 +219,7 @@ public class Duels extends QuizLogic {
             while (duelQueue.size() != 0)
             {
                 Thread.sleep(1000);
-                UserCommandHandler.preDuelResolveCommand(botIO.readUserQuery(user), user);
+                //UserCommandHandler.preDuelResolveCommand(botIO.readUserQuery(user), user);
             }
             duelProcessing(user, botIO);
         //} catch (ExitingLobbyException e)
@@ -233,7 +237,7 @@ public class Duels extends QuizLogic {
         while (user.getDuelId() != 0)   //uuuh, maybe just make this a condition in duelWaiting's while loop? why a separate method?
         {
             Thread.sleep(1000);
-            UserCommandHandler.preDuelResolveCommand(botIO.readUserQuery(user), user);
+            //UserCommandHandler.preDuelResolveCommand(botIO.readUserQuery(user), user);
         }
     }
 }

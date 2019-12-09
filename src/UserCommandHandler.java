@@ -25,6 +25,12 @@ public class UserCommandHandler {
             case "/top":
                 botIO.println(Highscore.generateTable(user), user.getChatId());
                 break;
+            case "/achievements":
+                botIO.println(user.getAchievementsListToPrint(), user.getChatId());
+                break;
+            case "/stats":
+                botIO.println(user.getStats().toString(), user.getChatId());
+                break;
             default:
                 botIO.println("Я не знаю такой команды.", user.getChatId());
         }

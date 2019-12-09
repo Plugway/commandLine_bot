@@ -12,6 +12,8 @@ public class UpdatesHandler {
         if (user != null) {
             if (update.message().text() != null)
                 user.messages.add(update.message().text());
+            else
+                user.getStats().addIgnoredMessagesCount(user, Main.botIO);
         } else {
             var newUser = new User(chat);
             UserTable.add(newUser);

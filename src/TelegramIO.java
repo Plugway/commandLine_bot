@@ -59,32 +59,41 @@ public class TelegramIO implements IO {
         while (user1.messages.size() == 0 && user2.messages.size() == 0) {
             Thread.sleep(1000);
         }
-
-        var userInput = new ArrayList<Queue<String>>();
-        userInput.set(0, user1.messages);
-        userInput.set(1, user1.messages);
-        if (userInput.get(0).size() == 0)
-            handleDuelUserInput(user1, user2, userInput, input, 0);
+        if (user1.messages.size() == 0)
+        {
+            if (user2.messages.peek().equals("/exit"))
+                throw new DuelInterruptedException("desire,2");
+            input[1] = user2.messages.poll();
+            var res = handleDuelUserInput(user1, user2, 2);
+            if (res.equals("/exit"))
+                throw new DuelInterruptedException("desire,1");
+            input[0] = res;
+        }
         else
-            handleDuelUserInput(user1, user2, userInput, input, 1);
+        {
+            if (user1.messages.peek().equals("/exit"))
+                throw new DuelInterruptedException("desire,1");
+            input[0] = user1.messages.poll();
+            var res = handleDuelUserInput(user2, user1, 1);
+            if (res.equals("/exit"))
+                throw new DuelInterruptedException("desire,2");
+            input[1] = res;
+        }
 
         System.out.println("Ввод от юзера с chatId " + user1.getChatId() + ":\n" + input[0]+"\nи ввод от юзера с chatId " + user2.getChatId() + ":\n" + input[1]);
         return input;
     }
 
-    private void handleDuelUserInput(User user1, User user2, ArrayList<Queue<String>> userInput, String[] input, int whichUsr) throws InterruptedException, DuelInterruptedException
+    private String handleDuelUserInput(User user1, User user2, int respondedUser) throws InterruptedException, DuelInterruptedException
     {
-        int otherUsr = whichUsr == 0? 1: 0;
-
-        input[otherUsr] = userInput.get(otherUsr).poll();
         println("Ожидаем противника.", user2.getChatId());
         println("Ваш противник уже ответил. Поторопитесь :)", user1.getChatId());
-        while (userInput.get(whichUsr).size() == 0)
+        while (user1.messages.size() == 0)
         {
-            if (userInput.get(otherUsr).size() != 0)
+            if (user2.messages.size() != 0)
             {
-                if (Objects.requireNonNull(userInput.get(otherUsr).poll()).equals("/exit"))
-                    throw new DuelInterruptedException("timeout," + (otherUsr+1));
+                if (Objects.requireNonNull(user2.messages.poll()).equals("/exit"))
+                    throw new DuelInterruptedException("timeout," + respondedUser);
                 else
                 {
                     println("Подождите еще немного, либо напишите /exit для того чтобы сдаться.", user2.getChatId());
@@ -93,7 +102,7 @@ public class TelegramIO implements IO {
             }
             Thread.sleep(1000);
         }
-        input[whichUsr] = userInput.get(whichUsr).poll();
+        return user1.messages.poll();
     }
     public static String getApiKey() {
         String apiKeyPath = Main.ApiKeyPath;
