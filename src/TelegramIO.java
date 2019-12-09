@@ -11,7 +11,9 @@ import java.util.Objects;
 import java.util.Queue;
 
 public class TelegramIO implements IO {
-    private TelegramBot bot = new TelegramBot(getApiKey());
+
+    private static String apiKey = readApiKey(Main.ApiKeyPath);
+    private TelegramBot bot = new TelegramBot(apiKey);
 
     public TelegramIO() {
         setListener();
@@ -104,12 +106,15 @@ public class TelegramIO implements IO {
         }
         return user1.messages.poll();
     }
-    public static String getApiKey() {
-        String apiKeyPath = Main.ApiKeyPath;
+    public static String readApiKey(String path) {
         try {
-            return Files.readString(Paths.get(apiKeyPath), StandardCharsets.UTF_8);
+            return Files.readString(Paths.get(path), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new Error("Can't read api key from " + apiKeyPath);
+            throw new Error("Can't read api key from " + path);
         }
+    }
+    public static String getApiKey()
+    {
+        return apiKey;
     }
 }

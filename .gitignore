@@ -1,8 +1,8 @@
 .idea/*
 lib/
+libs/
 out/
+data/admpass.txt
 data/api.txt
-
 data/users.txt
-
 data/usersHash.txt

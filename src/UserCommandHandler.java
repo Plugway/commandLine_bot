@@ -19,8 +19,10 @@ public class UserCommandHandler {
             case "/admin":
                 botIO.println("Введите ключ досупа:", user.getChatId());
                 var response = botIO.readUserQuery(user);
-                if (response.equals(TelegramIO.getApiKey()))
+                if (response.equals(AdminPanel.getAdminPassword()))
                     new AdminPanel(user).run();
+                else
+                    botIO.println("Неверный пароль.", user.getChatId());
                 break;
             case "/top":
                 botIO.println(Highscore.generateTable(user), user.getChatId());

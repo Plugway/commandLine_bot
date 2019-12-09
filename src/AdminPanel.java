@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -5,6 +9,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class AdminPanel {
+    private static String adminPassword;
+    public static String getAdminPassword(){return adminPassword;}
+    public static void setAdminPassword(){adminPassword = getAdminPassword(Main.AdminPanelPasswordPath);}
+
     public AdminPanel(User user){
         this.user = user;
     }
@@ -173,12 +181,10 @@ public class AdminPanel {
             var input = botIO.readUserQuery(user);
             switch (input)
             {
-                /*
                 case "/talk":
                     dialogueWUser(gettedUser);
                     printHelpText(MenuHelpText.adminInteractUser);
                     break;
-                 */
                 case "/exit":
                     return;
                 default:
@@ -187,7 +193,6 @@ public class AdminPanel {
         }
     }
 
-    /*
     private void dialogueWUser(User gettedUser) throws InterruptedException {
         botIO.println("Для выхода из диалога напишите /exit.", user.getChatId());
         Logic.setAdminId(user.getChatId(), gettedUser.getChatId());
@@ -203,5 +208,16 @@ public class AdminPanel {
                 botIO.println(input, gettedUser.getChatId());
         }
     }
-     */
+
+    private static String getAdminPassword(String path)
+    {
+        try {
+            var pass = Files.readString(Paths.get(path), StandardCharsets.UTF_8);
+            System.out.println("Password read successfully: " + pass);
+            return pass;
+        } catch (IOException e) {
+            System.out.println("Can't read admin pass from " + path + ".\nNow admin pass equals api key.");
+            return TelegramIO.getApiKey();
+        }
+    }
 }
