@@ -55,8 +55,8 @@ public class QuizLogic {
                 botIO.println("Новый рекорд\uD83C\uDF89", user.getChatId());
                 user.getStats().addQuizHighscoreHitCount(user, botIO);
                 user.getStats().setHighscore(score, user, botIO);
-                UserTableSerialization.serialize(UserTable.get(), Main.UsersPath);
-                Hash.writeHashOfFileToFile(Main.UsersPath, Main.UsersHashPath);
+                UserTableSerialization.serialize(UserTable.get(), FilePaths.UsersPath);
+                Hash.writeHashOfFileToFile(FilePaths.UsersPath, FilePaths.UsersHashPath);
             }
         }
     }

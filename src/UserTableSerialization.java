@@ -16,7 +16,7 @@ public class UserTableSerialization {
         List<User> resultAsList;
         Object resultAsObject;
 
-        if (!Hash.verifyHashFileAgainst(Main.UsersHashPath, Main.UsersPath))
+        if (!Hash.verifyHashFileAgainst(FilePaths.UsersHashPath, FilePaths.UsersPath))
             throw new WrongHashException("The Users file is broken, hash doesn't match.");
 
         try {

@@ -17,8 +17,8 @@ public class UpdatesHandler {
         } else {
             var newUser = new User(chat);
             UserTable.add(newUser);
-            UserTableSerialization.serialize(UserTable.get(), Main.UsersPath);
-            Hash.writeHashOfFileToFile(Main.UsersPath, Main.UsersHashPath);
+            UserTableSerialization.serialize(UserTable.get(), FilePaths.UsersPath);
+            Hash.writeHashOfFileToFile(FilePaths.UsersPath, FilePaths.UsersHashPath);
 
             UserInteractionThreads.createThread(newUser, true);
         }

@@ -11,7 +11,7 @@ import java.util.Date;
 public class AdminPanel {
     private static String adminPassword;
     public static String getAdminPassword(){return adminPassword;}
-    public static void setAdminPassword(){adminPassword = getAdminPassword(Main.AdminPanelPasswordPath);}
+    public static void setAdminPassword(){adminPassword = getAdminPassword(FilePaths.AdminPanelPasswordPath);}
 
     public AdminPanel(User user){
         this.user = user;

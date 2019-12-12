@@ -17,28 +17,27 @@ public class Tests {
         Hash.verifyHashFileAgainst("Tests/testUsersHash.txt", "Tests/testUsers.txt");      //failure if throws exception
     }
 
-    /*
     @Test
     public void correctAnswerTest() {
         int[] userInput = {1, 2};
-        List<Integer> rightInput = Arrays.asList(1, 2);
-        Assert.assertTrue(Question.isAnswersRight(userInput, rightInput));
+        NumQuestion testQuestion = new NumQuestion("Is this a question?", "1. Yes$ 2. Yes", "1,2");
+        Assert.assertTrue(testQuestion.assertAnswers(userInput));
     }
 
     @Test
     public void wrongAnswerTest() {
-        int[] userInput = {3, 4};
-        List<Integer> rightInput = Arrays.asList(1, 2);
-        Assert.assertFalse(Question.isAnswersRight(userInput, rightInput));
+        int[] userInput = {1, 55};
+        NumQuestion testQuestion = new NumQuestion("Is this a question?", "1. Yes$ 2. Yes$ 3. No", "1,2");
+        Assert.assertFalse(testQuestion.assertAnswers(userInput));
     }
 
     @Test
     public void incompleteAnswerTest() {
         int[] userInput = {1};
-        List<Integer> rightInput = Arrays.asList(1, 2);
-        Assert.assertFalse(Question.isAnswersRight(userInput, rightInput));
+        NumQuestion testQuestion = new NumQuestion("Is this a question?", "1. Yes$ 2. Yes", "1,2");
+        Assert.assertFalse(testQuestion.assertAnswers(userInput));
     }
-*/
+
     @Test
     public void questionToggleTest() {
         var question = new Question();

@@ -12,7 +12,7 @@ import java.util.Queue;
 
 public class TelegramIO implements IO {
 
-    private static String apiKey = readApiKey(Main.ApiKeyPath);
+    private static String apiKey = readApiKey(FilePaths.ApiKeyPath);
     private TelegramBot bot = new TelegramBot(apiKey);
 
     public TelegramIO() {
