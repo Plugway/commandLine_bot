@@ -8,9 +8,9 @@ public class Main {
     public static IO botIO = BotIOFactory.getBotIO(botMode);
     public static void main(String[] args) throws DeserializationException, WrongHashException, IOException
     {
-        new UserTable(UserTableSerialization.deserialize(FilePaths.UsersPath));
+        UserTable.initializeUserTable(FilePaths.UsersPath);
         Question.parseQuestions(FilePaths.QuestPath);
-        AdminPanel.setAdminPassword();
+        AdminPanel.initializeAdminPanel();
         Logic.initializeAllUserThreads();
 
         System.out.println("started");

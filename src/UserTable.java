@@ -7,9 +7,8 @@ import java.util.stream.Collectors;
 
 public class UserTable {
 
-    public UserTable(List<User> userTable)
-    {
-        UserTable.userTable = userTable;
+    public static void initializeUserTable(String userTablePath) throws DeserializationException, WrongHashException {
+        UserTable.userTable = UserTableSerialization.deserialize(userTablePath);
     }
 
     private static List<User> userTable;

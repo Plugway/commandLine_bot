@@ -5,13 +5,19 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalField;
 import java.util.Calendar;
 import java.util.Date;
 
 public class AdminPanel {
     private static String adminPassword;
+    public static void initializeAdminPanel() {adminPassword = readAdminPassword(FilePaths.AdminPanelPasswordPath);}
     public static String getAdminPassword(){return adminPassword;}
-    public static void setAdminPassword(){adminPassword = getAdminPassword(FilePaths.AdminPanelPasswordPath);}
 
     public AdminPanel(User user){
         this.user = user;
@@ -57,7 +63,7 @@ public class AdminPanel {
                 time = parseTimeToSleep(input);
                 break;
             }
-            catch (ParseException e)
+            catch (DateTimeParseException e)
             {
                 botIO.println("Неправильное время, повторите ввод.", user.getChatId());
             }
@@ -67,14 +73,8 @@ public class AdminPanel {
         botIO.setListener();
         botIO.println("Время сна вышло.", user.getChatId());
     }
-    private long parseTimeToSleep(String time) throws ParseException {
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-        Date dt = formatter.parse(time);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(dt);
-        return ((cal.get(Calendar.HOUR)
-                *60+cal.get(Calendar.MINUTE))
-                *60+cal.get(Calendar.SECOND))*1000;
+    private long parseTimeToSleep(String time) throws DateTimeParseException {
+        return LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm:ss")).getLong(ChronoField.MILLI_OF_DAY);
     }
     private void printHelpText(MenuHelpText type)
     {
@@ -209,10 +209,10 @@ public class AdminPanel {
         }
     }
 
-    private static String getAdminPassword(String path)
+    private static String readAdminPassword(String path)
     {
         try {
-            var pass = Files.readString(Paths.get(path), StandardCharsets.UTF_8);
+            var pass = Files.readString(Paths.get(path), StandardCharsets.UTF_8).replaceAll("\n", "");
             System.out.println("Password read successfully: " + pass);
             return pass;
         } catch (IOException e) {

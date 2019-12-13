@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Duels extends QuizLogic {
     public Duels(User user1, User user2, IO botIO)
@@ -16,7 +17,7 @@ public class Duels extends QuizLogic {
         user2.setDuelId(user1.getChatId());
     }
 
-    private static Queue<User> duelQueue = new LinkedList<>();
+    private static ConcurrentLinkedQueue<User> duelQueue = new ConcurrentLinkedQueue<>();
     private User user1;
     private User user2;
     private long user1Id;

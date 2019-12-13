@@ -44,15 +44,12 @@ public class TelegramIO implements IO {
         return userInput.poll();
     }
 
-    public void println(String response, long chatId) {
-        bot.execute(new SendMessage(chatId, response));
-        System.out.println("Выслано юзеру с chatId " + chatId + ":\n" + response);
-    }
-
-    public void println(String response, long chatId1, long chatId2) {
-        bot.execute(new SendMessage(chatId1, response));
-        bot.execute(new SendMessage(chatId2, response));
-        System.out.println("Выслано юзерам с chatId " + chatId1 + " и " + chatId2 + ":\n" + response);
+    public void println(String response, long... chatId) {
+        for (long id : chatId)
+        {
+            bot.execute(new SendMessage(id, response));
+            System.out.println("Выслано юзеру с chatId " + id + ":\n" + response);
+        }
     }
 
     public String[] readDuelUsersQueries(User user1, User user2) throws InterruptedException, DuelInterruptedException
