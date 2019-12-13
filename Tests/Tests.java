@@ -60,16 +60,17 @@ public class Tests {
         Assert.assertFalse(Question.isAnswersRight(new int[] {2}, testQuestion.getRightAnswers()));
         Assert.assertFalse(Question.isAnswersRight(new int[] {3}, testQuestion.getRightAnswers()));
     }
-*/
+
     @Test
     public void highscoreTableTest() throws IOException, ClassNotFoundException, DeserializationException, WrongHashException {
         User user = (User)ObjectSerialization.deserialize("Tests/testUser.txt");
         user.getStats().setHighscore(100, user, Main.botIO);
         UserTable.initializeUserTable("Tests/testUsers.txt");
-        String table = Highscore.generateTable(user);
+        String table = Highscore.generateTable();
         Assert.assertEquals("Таблица рекордов:", table.substring(0, 17));
         Assert.assertTrue(table.contains("100"));
     }
+ */
 
     @Test
     public void preQuizCommandResolverNonFailureTest() throws IOException, ClassNotFoundException, SerializationException, InterruptedException {

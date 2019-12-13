@@ -213,7 +213,7 @@ public class AdminPanel {
     {
         try {
             var pass = Files.readString(Paths.get(path), StandardCharsets.UTF_8).replaceAll("\n", "");
-            System.out.println("Password read successfully: " + pass);
+            System.out.println("Admin password read successfully");
             return pass;
         } catch (IOException e) {
             System.out.println("Can't read admin pass from " + path + ".\nNow admin pass equals api key.");

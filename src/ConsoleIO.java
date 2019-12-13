@@ -12,13 +12,11 @@ public class ConsoleIO implements IO {
         return new String[0];
     }
 
+    @Override
+    public void println(String response, long... chatId) { }
+
     public void println(String response, long chatId) {
         System.out.println(response);
-    }
-
-    @Override
-    public void println(String response, long chatId1, long chatId2) {
-
     }
 
     @Override
