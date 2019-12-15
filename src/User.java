@@ -15,7 +15,7 @@ public class User implements Serializable {
         chatId = chat.id();
         this.chat = chat;
         duelId = 0;
-        duelQuestCount = 0;
+        currentQuestCount = 0;
     }
 
     public Queue<String> messages = new PriorityQueue<>();
@@ -25,7 +25,7 @@ public class User implements Serializable {
     private long chatId;
     private Chat chat;
     private long duelId;
-    private int duelQuestCount;
+    private int currentQuestCount;
     private Stats stats = new Stats();
     private List<Achievement> achievements = new ArrayList<>();
 
@@ -55,9 +55,9 @@ public class User implements Serializable {
 
     public void setDuelId(long duelId){this.duelId = duelId;}
 
-    public void setDuelQuestCount(int duelQuestCount){this.duelQuestCount = duelQuestCount;}
+    public void setCurrentQuestCount(int currentQuestCount){this.currentQuestCount = currentQuestCount;}
 
-    public int getDuelQuestCount(){return duelQuestCount;}
+    public int getCurrentQuestCount(){return currentQuestCount;}
 
     public List<Achievement> getAchievements(){return achievements;}
 

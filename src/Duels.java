@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Duels extends QuizLogic {
@@ -11,7 +9,7 @@ public class Duels extends QuizLogic {
         this.user2 = user2;
         user1Id = user1.getChatId();
         user2Id = user2.getChatId();
-        this.questNum = (user1.getDuelQuestCount()+user2.getDuelQuestCount())/2;
+        this.questNum = (user1.getCurrentQuestCount()+user2.getCurrentQuestCount())/2;
         this.botIO = botIO;
         user1.setDuelId(user2.getChatId());
         user2.setDuelId(user1.getChatId());
@@ -25,12 +23,12 @@ public class Duels extends QuizLogic {
     private int questNum;
     private IO botIO;
 
-    public static void enterDuel(User user, IO botIO) throws InterruptedException {
+    public static void enterDuel(User user, IO botIO) throws InterruptedException, SerializationException {
         botIO.println("Введите число вопросов для дуэли.", user.getChatId());
-        user.setDuelQuestCount(QuizLogic.getTotalQuestionsToAsk(user, Question.questionsList.size(), botIO));
+        user.setCurrentQuestCount(QuizLogic.getTotalQuestionsToAsk(user, Question.questionsList.size(), botIO));
         if (duelQueue.size() != 0)
         {
-            new Duels(user, duelQueue.poll(), botIO).runDuel();
+            new QuizLogic().runQuiz(botIO, user, duelQueue.poll());
         }
         else
         {
@@ -49,8 +47,8 @@ public class Duels extends QuizLogic {
         var score1 = 0;
         var score2 = 0;
         try {
-            botIO.println("Число вопросов, предложенное первым игроком - " + user1.getDuelQuestCount() +
-                    ", вторым - " + user2.getDuelQuestCount() + ". Число вопросов в дуэли: " + questNum, user1Id, user2Id);
+            botIO.println("Число вопросов, предложенное первым игроком - " + user1.getCurrentQuestCount() +
+                    ", вторым - " + user2.getCurrentQuestCount() + ". Число вопросов в дуэли: " + questNum, user1Id, user2Id);
             for (currentQuestionNumber = 0; currentQuestionNumber < questNum; ++currentQuestionNumber)
             {
                 var currentQuestion = questions.get(currentQuestionNumber);
@@ -89,8 +87,8 @@ public class Duels extends QuizLogic {
         }
         user1.setDuelId(0);
         user2.setDuelId(0);
-        user1.setDuelQuestCount(0);
-        user2.setDuelQuestCount(0);
+        user1.setCurrentQuestCount(0);
+        user2.setCurrentQuestCount(0);
     }
 
     private int getScoreAdd(boolean ansRight, User user)

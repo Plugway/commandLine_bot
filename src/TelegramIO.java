@@ -47,6 +47,8 @@ public class TelegramIO implements IO {
     public void println(String response, long... chatId) {
         for (long id : chatId)
         {
+            if (id == 0)                //не отправляем сообщения на id 0, для совмещения викторины и дуэлей
+                continue;
             bot.execute(new SendMessage(id, response));
             System.out.println("Выслано юзеру с chatId " + id + ":\n" + response);
         }
