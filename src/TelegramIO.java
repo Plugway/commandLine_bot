@@ -62,8 +62,10 @@ public class TelegramIO implements IO {
         }
         if (user1.messages.size() == 0)
         {
-            if (user2.messages.peek().equals("/exit"))
+            if (user2.messages.peek().equals("/exit")) {
+                user2.messages.poll();
                 throw new DuelInterruptedException("desire,2");
+            }
             input[1] = user2.messages.poll();
             var res = handleDuelUserInput(user1, user2, 2);
             if (res.equals("/exit"))
@@ -72,8 +74,10 @@ public class TelegramIO implements IO {
         }
         else
         {
-            if (user1.messages.peek().equals("/exit"))
+            if (user1.messages.peek().equals("/exit")) {
+                user1.messages.poll();
                 throw new DuelInterruptedException("desire,1");
+            }
             input[0] = user1.messages.poll();
             var res = handleDuelUserInput(user2, user1, 1);
             if (res.equals("/exit"))

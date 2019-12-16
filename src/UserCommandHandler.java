@@ -60,8 +60,7 @@ public class UserCommandHandler {
         }
     }
 
-    public static void preDuelResolveCommand(String command, User user)
-    {
+    public static void preDuelResolveCommand(String command, User user) throws ExitingLobbyException {
         var botIO = Main.botIO;
         switch (command) {
             case "/start":
@@ -70,8 +69,8 @@ public class UserCommandHandler {
             case "/help":
                 botIO.println("Ждём, когда найдётся противник.", user.getChatId());
                 break;
-            //case "/exit":
-                //throw new ExitingLobbyException();
+            case "/exit":
+                throw new ExitingLobbyException();
             case "/top":
                 botIO.println("Вы не можете смотреть рекорды, пока находитесь в лобби.", user.getChatId());
                 break;

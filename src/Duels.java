@@ -15,13 +15,21 @@ public class Duels {
         {
             duelQueue.add(user);
             botIO.println("Ждем противника.", user.getChatId());
-            duelWaiting(user);
+            try {
+                duelWaiting(user, botIO);
+            } catch (ExitingLobbyException e) {
+                duelQueue.remove(user);
+                botIO.println("Вы вышли из лобби.", user.getChatId());
+            }
         }
     }
 
-    private static void duelWaiting(User user) throws InterruptedException {
+    private static void duelWaiting(User user, IO botIO) throws InterruptedException, ExitingLobbyException {
+        var messages = user.messages;
         while (duelQueue.size() != 0)
         {
+            if (messages.size() != 0)
+                UserCommandHandler.preDuelResolveCommand(botIO.readUserQuery(user), user);
             Thread.sleep(1000);
         }
         duelProcessing(user);

@@ -56,7 +56,7 @@ public class Hash
             throw new RuntimeException("Failed to write hash to file.");
         }
 
-        System.out.println("WROTE: " + contentToWrite + " to " + filePath);
+        // System.out.println("WROTE: " + contentToWrite + " to " + filePath);
     }
 
     private static String calculateNewHash(byte[] bytes) {

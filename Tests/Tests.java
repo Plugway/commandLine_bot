@@ -55,7 +55,7 @@ public class Tests {
     }
 
     @Test
-    public void duelCommandResolverNonFailureTest() throws IOException, ClassNotFoundException{
+    public void duelCommandResolverNonFailureTest() throws IOException, ClassNotFoundException, ExitingLobbyException {
         User user = (User)ObjectSerialization.deserialize("Tests/testUser.txt");
         UserCommandHandler.preDuelResolveCommand("/help", user);
     }
