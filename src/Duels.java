@@ -9,7 +9,7 @@ public class Duels {
         user.setCurrentQuestCount(QuizLogic.getTotalQuestionsToAsk(user, Question.questionsList.size(), botIO));
         if (duelQueue.size() != 0)
         {
-            new QuizLogic().runQuiz(botIO, user, duelQueue.poll());
+            new QuizLogic(botIO, user, duelQueue.poll()).runQuiz();
         }
         else
         {

@@ -16,11 +16,12 @@ import java.util.Date;
 
 public class AdminPanel {
     static {
-        initializeAdminPanel();
+        //initializeAdminPanel();
+        adminPassword = readAdminPassword(FilePaths.AdminPanelPasswordPath);
     }
 
     private static String adminPassword;
-    public static void initializeAdminPanel() {adminPassword = readAdminPassword(FilePaths.AdminPanelPasswordPath);}
+    //public static void initializeAdminPanel() {}
     public static String getAdminPassword(){return adminPassword;}
 
     public AdminPanel(User user){

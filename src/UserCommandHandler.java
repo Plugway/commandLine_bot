@@ -5,7 +5,7 @@ public class UserCommandHandler {
         var botIO = Main.botIO;
         switch (command) {
             case "/start":
-                new QuizLogic().enterQuiz(user, botIO);
+                QuizLogic.enterQuiz(user, botIO);
                 break;
             case "/help":
                 botIO.println(Logic.getHelpText(), user.getChatId());

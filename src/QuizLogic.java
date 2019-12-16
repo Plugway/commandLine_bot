@@ -6,7 +6,16 @@ import java.util.Random;
 
 public class QuizLogic {
 
-    public static final String styleDelimiter = ")";
+    public QuizLogic(IO botIO, User... users) throws QuizCreationException {
+        verifyUsersLength(users);
+        this.botIO = botIO;
+        if (users.length == 2)
+            initializeDuelingUsers(users);
+        else
+            initializeQuizUser(users[0]);
+    }
+
+    private static final String styleDelimiter = ")";
 
     private static Random rnd = new Random(System.nanoTime());
     private static int getRandom(int min, int max) {
@@ -20,84 +29,47 @@ public class QuizLogic {
             throw new QuizCreationException("Unable to create a quiz with 0 users.");
     }
 
-    public void enterQuiz(User user, IO botIO) throws SerializationException, InterruptedException, QuizCreationException {
+    public static void enterQuiz(User user, IO botIO) throws SerializationException, InterruptedException, QuizCreationException {
         botIO.println("Сколько вопросов?", user.getChatId());
         user.setCurrentQuestCount(getTotalQuestionsToAsk(user, Question.questionsList.size(), botIO));
-        runQuiz(botIO, user);
+        new QuizLogic(botIO, user).runQuiz();
     }
 
-    public void runQuiz(IO botIO, User... users) throws InterruptedException, SerializationException, QuizCreationException {
+    private User user1;
+    private User user2;
+    private int questionsAskedQuantity = 0;
+    private int score1 = 0;
+    private int score2 = 0;
+    private long user1Id;
+    private long user2Id;
+    private int totalQuestionsToAsk;
+    private IO botIO;
 
-        verifyUsersLength(users);
+    public void runQuiz() throws InterruptedException, SerializationException {
 
-        var user1 = users[0];
-        User user2 = null;
-        if (users.length == 2) {
-            user2 = users[1];
-            user1.setDuelId(user2.getChatId());
-            user2.setDuelId(user1.getChatId());
-        }
-        long user1Id = user1.getChatId();
-        long user2Id = 0;
-        var totalQuestionsToAsk = 0;
-        if (user2 == null)
-            totalQuestionsToAsk = user1.getCurrentQuestCount();
-        else {
-            totalQuestionsToAsk = (user1.getCurrentQuestCount() + user2.getCurrentQuestCount()) / 2;
-            user2Id = user2.getChatId();
-        }
+        determineTotalQuestionsAndIDs();
 
         var questions = new ArrayList<>(Question.questionsList);
         Collections.shuffle(questions, rnd);
-
-        var currentQuestionNumber = 0;
-        var questionsAskedQuantity = 0;
-        var score1 = 0;
-        var score2 = 0;
 
         try {
             if (user2 != null)
                 botIO.println("Число вопросов, предложенное первым игроком - " + user1.getCurrentQuestCount() +
                         ", вторым - " + user2.getCurrentQuestCount() + ". Число вопросов в дуэли: " + totalQuestionsToAsk, user1Id, user2Id);
+            int currentQuestionNumber;
             for (currentQuestionNumber = 0; currentQuestionNumber < totalQuestionsToAsk; ++currentQuestionNumber) {
                 var currentQuestion = questions.get(currentQuestionNumber);
 
                 botIO.println((currentQuestionNumber + 1) + styleDelimiter + currentQuestion.getQuestionText(), user1Id, user2Id);         //печатаем вопрос
                 if (currentQuestion instanceof NumQuestion)
-                {
-                    var currentNumQuestion = (NumQuestion)currentQuestion;
-                    for (var i = 0; i < (currentNumQuestion).getAnswers().size(); i++)                                       //печатаем ответы
-                        botIO.println((currentNumQuestion).getAnswers().get(i),  user1Id, user2Id);
-                    if (user2 == null) {
-                        var intInput = handleIntUserQuizInput(user1, botIO);
-                        score1 += getScoreAdd(currentNumQuestion.assertAnswers(intInput), user1, botIO);
-                    }
-                    else
-                    {
-                        var intInput = handleIntUsersDuelInput(user1, user2, botIO);
-                        score1 += getScoreAdd(currentNumQuestion.assertAnswers(intInput[0]), user1, botIO);
-                        score2 += getScoreAdd(currentNumQuestion.assertAnswers(intInput[1]), user2, botIO);
-                    }
-                }
+                    handleNumQuestion(currentQuestion);
                 else if (currentQuestion instanceof WordQuestion)
-                {
-                    var currentWordQuestion = (WordQuestion)currentQuestion;
-                    if (user2 == null) {
-                        score1 += getScoreAdd(currentWordQuestion.assertAnswer(handleStrUserQuizInput(user1, botIO)), user1, botIO);
-                    }
-                    else
-                    {
-                        var input = handleStrUsersDuelInput(user1, user2, botIO);
-                        score1 += getScoreAdd(currentWordQuestion.assertAnswer(input[0]), user1, botIO);
-                        score2 += getScoreAdd(currentWordQuestion.assertAnswer(input[1]), user2, botIO);
-                    }
-                }
+                    handleWordQuestion(currentQuestion);
                 questionsAskedQuantity++;
                 user1.getStats().addQuestionsCount(user1, botIO);
                 if (user2 != null)
                     user2.getStats().addQuestionsCount(user2,botIO);
-                if (currentQuestionNumber == totalQuestionsToAsk - 1)
-                {
+                if (currentQuestionNumber == totalQuestionsToAsk - 1) {
                     if (user2 == null)
                         throw new QuizShouldFinishException();
                     else
@@ -105,24 +77,57 @@ public class QuizLogic {
                 }
             }
         } catch (QuizShouldFinishException e) {
-            handleResultsQuizFinished(score1, questionsAskedQuantity, user1, botIO);
+            handleResultsQuizFinished();
         } catch (DuelShouldFinishException e) {
-            printResultsDuelFinished(score1, score2, questionsAskedQuantity, user1, user2, botIO);
-        } catch (DuelInterruptedException e) {
             user1.getStats().addDuelCount(user1, botIO);
             user2.getStats().addDuelCount(user2, botIO);
-            printResultsDuelInterrupted(score1, score2, e, user1, user2, botIO);
+            printResultsDuelFinished();
+        } catch (DuelInterruptedException e) {
+            printResultsDuelInterrupted(e);
         }
-        user1.setCurrentQuestCount(0);
-        if (user2 != null)
-        {
-            user1.setDuelId(0);
-            user2.setDuelId(0);
-            user2.setCurrentQuestCount(0);
+        resetUserValues();
+    }
+
+    private void handleNumQuestion(Question currentQuestion) throws QuizShouldFinishException, InterruptedException, DuelInterruptedException {
+        var currentNumQuestion = (NumQuestion)currentQuestion;
+        for (var i = 0; i < (currentNumQuestion).getAnswers().size(); i++)                                       //печатаем ответы
+            botIO.println((currentNumQuestion).getAnswers().get(i),  user1Id, user2Id);
+        if (user2 == null) {
+            var intInput = handleIntUserQuizInput(user1, botIO);
+            score1 += getScoreAdd(currentNumQuestion.assertAnswers(intInput), user1, botIO);
+        }
+        else {
+            var intInput = handleIntUsersDuelInput(user1, user2, botIO);
+            score1 += getScoreAdd(currentNumQuestion.assertAnswers(intInput[0]), user1, botIO);
+            score2 += getScoreAdd(currentNumQuestion.assertAnswers(intInput[1]), user2, botIO);
         }
     }
 
-    private void printResultsDuelInterrupted(int score1, int score2, DuelInterruptedException e, User user1, User user2, IO botIO)
+    private void handleWordQuestion(Question currentQuestion) throws QuizShouldFinishException, InterruptedException, DuelInterruptedException {
+        var currentWordQuestion = (WordQuestion)currentQuestion;
+        if (user2 == null) {
+            score1 += getScoreAdd(currentWordQuestion.assertAnswer(handleStrUserQuizInput(user1, botIO)), user1, botIO);
+        }
+        else {
+            var input = handleStrUsersDuelInput(user1, user2, botIO);
+            score1 += getScoreAdd(currentWordQuestion.assertAnswer(input[0]), user1, botIO);
+            score2 += getScoreAdd(currentWordQuestion.assertAnswer(input[1]), user2, botIO);
+        }
+    }
+
+    private void determineTotalQuestionsAndIDs() {
+        user1Id = user1.getChatId();
+        user2Id = 0;
+        totalQuestionsToAsk = 0;
+        if (user2 == null)
+            totalQuestionsToAsk = user1.getCurrentQuestCount();
+        else {
+            totalQuestionsToAsk = (user1.getCurrentQuestCount() + user2.getCurrentQuestCount()) / 2;
+            user2Id = user2.getChatId();
+        }
+    }
+
+    private void printResultsDuelInterrupted(DuelInterruptedException e)
     {
         var user1Id = user1.getChatId();
         var user2Id = user2.getChatId();
@@ -171,19 +176,19 @@ public class QuizLogic {
             }
         }
     }
-    private void printResultsDuelFinished(int score1, int score2, int questionsAskedQuantity, User user1, User user2, IO botIO)
+    private void printResultsDuelFinished()
     {
         var user1Id = user1.getChatId();
         var user2Id = user2.getChatId();
         botIO.println("Дуэль завершена.", user1Id, user2Id);
-        //botIO.println("Твой счет: " + score1 + " из " + questionsAskedQuantity, user1Id);
-        //botIO.println("Твой счет: " + score2 + " из " + questionsAskedQuantity, user2Id);
         if (score1 < score2)
             printDuelResult(user1, user2, score1, score2, botIO);
         else if (score1 > score2)
             printDuelResult(user2, user1, score2, score1, botIO);
-        else
+        else {
+            botIO.println("Твой счет: " + score1 + " из " + questionsAskedQuantity, user1Id, user2Id);
             botIO.println("Ничья :|", user1Id, user2Id);
+        }
     }
 
     private void printDuelResult(User user1, User user2, int score1, int score2, IO botIO)
@@ -194,7 +199,7 @@ public class QuizLogic {
         botIO.println("Ты выиграл! Твой счет: "+score2+", счет противника: "+score1, user2.getChatId());
     }
 
-    private void handleResultsQuizFinished(int score1, int questionsAskedQuantity, User user1, IO botIO) throws SerializationException {
+    private void handleResultsQuizFinished() throws SerializationException {
         botIO.println("Викторина завершена.", user1.getChatId());
         botIO.println("Твой счет: " + score1 + " из " + questionsAskedQuantity, user1.getChatId());
         if (user1.getHighscore() < score1) {
@@ -204,6 +209,21 @@ public class QuizLogic {
             UserTableSerialization.serialize(UserTable.get(), FilePaths.UsersPath);
             Hash.writeHashOfFileToFile(FilePaths.UsersPath, FilePaths.UsersHashPath);
         }
+    }
+
+    private void initializeDuelingUsers(User... users)
+    {
+        user1 = users[0];
+        user2 = users[1];
+        user1Id = user1.getChatId();
+        user2Id = user2.getChatId();
+        user1.setDuelId(user2.getChatId());
+        user2.setDuelId(user1.getChatId());
+    }
+    private void initializeQuizUser(User user)
+    {
+        user1 = user;
+        user1Id = user.getChatId();
     }
 
     private int getScoreAdd(boolean ansRight, User user, IO botIO)
@@ -309,5 +329,16 @@ public class QuizLogic {
             throw new DuelInterruptedException("desire,2");
         }
         return input;
+    }
+
+    private void resetUserValues()
+    {
+        user1.setCurrentQuestCount(0);
+        if (user2 != null)
+        {
+            user1.setDuelId(0);
+            user2.setDuelId(0);
+            user2.setCurrentQuestCount(0);
+        }
     }
 }
