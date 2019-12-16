@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class QuizLogic {
+
     public static final String styleDelimiter = ")";
 
     private static Random rnd = new Random(System.nanoTime());
@@ -12,19 +13,22 @@ public class QuizLogic {
         return min + rnd.nextInt(max - min + 1);
     }
 
-    public void enterQuiz(User user, IO botIO) throws SerializationException, InterruptedException {
+    public void verifyUsersLength(User... users) throws QuizCreationException {
+        if (users.length > 2)
+            throw new QuizCreationException("Unable to create a quiz with more than 2 users.");
+        else if (users.length == 0)
+            throw new QuizCreationException("Unable to create a quiz with 0 users.");
+    }
+
+    public void enterQuiz(User user, IO botIO) throws SerializationException, InterruptedException, QuizCreationException {
         botIO.println("Сколько вопросов?", user.getChatId());
         user.setCurrentQuestCount(getTotalQuestionsToAsk(user, Question.questionsList.size(), botIO));
         runQuiz(botIO, user);
     }
 
-    public void runQuiz(IO botIO, User... users) throws InterruptedException, SerializationException {
+    public void runQuiz(IO botIO, User... users) throws InterruptedException, SerializationException, QuizCreationException {
 
-        /*
-        if (users.length > 2)
-            throw new QuizCreationException("Unable to create quiz with more than 2 users."); // wtf
-        */
-
+        verifyUsersLength(users);
 
         var user1 = users[0];
         User user2 = null;
@@ -101,21 +105,10 @@ public class QuizLogic {
                 }
             }
         } catch (QuizShouldFinishException e) {
-            botIO.println("Викторина завершена.", user1.getChatId());
-            botIO.println("Твой счет: " + score1 + " из " + questionsAskedQuantity, user1.getChatId());
-            //Highscore.checkScore(user, botIO, score);
-            if (user1.getHighscore() < score1) {
-                botIO.println("Новый рекорд\uD83C\uDF89", user1.getChatId());
-                user1.getStats().addQuizHighscoreHitCount(user1, botIO);
-                user1.getStats().setHighscore(score1, user1, botIO);
-                UserTableSerialization.serialize(UserTable.get(), FilePaths.UsersPath);
-                Hash.writeHashOfFileToFile(FilePaths.UsersPath, FilePaths.UsersHashPath);
-            }
-        } catch (DuelShouldFinishException e)
-        {
+            handleResultsQuizFinished(score1, questionsAskedQuantity, user1, botIO);
+        } catch (DuelShouldFinishException e) {
             printResultsDuelFinished(score1, score2, questionsAskedQuantity, user1, user2, botIO);
-        } catch (DuelInterruptedException e)
-        {
+        } catch (DuelInterruptedException e) {
             user1.getStats().addDuelCount(user1, botIO);
             user2.getStats().addDuelCount(user2, botIO);
             printResultsDuelInterrupted(score1, score2, e, user1, user2, botIO);
@@ -192,6 +185,7 @@ public class QuizLogic {
         else
             botIO.println("Ничья :|", user1Id, user2Id);
     }
+
     private void printDuelResult(User user1, User user2, int score1, int score2, IO botIO)
     {
         user1.getStats().addDuelLostCount(user1, botIO);
@@ -199,6 +193,19 @@ public class QuizLogic {
         user2.getStats().addDuelWinsCount(user2, botIO);
         botIO.println("Ты выиграл! Твой счет: "+score2+", счет противника: "+score1, user2.getChatId());
     }
+
+    private void handleResultsQuizFinished(int score1, int questionsAskedQuantity, User user1, IO botIO) throws SerializationException {
+        botIO.println("Викторина завершена.", user1.getChatId());
+        botIO.println("Твой счет: " + score1 + " из " + questionsAskedQuantity, user1.getChatId());
+        if (user1.getHighscore() < score1) {
+            botIO.println("Новый рекорд\uD83C\uDF89", user1.getChatId());
+            user1.getStats().addQuizHighscoreHitCount(user1, botIO);
+            user1.getStats().setHighscore(score1, user1, botIO);
+            UserTableSerialization.serialize(UserTable.get(), FilePaths.UsersPath);
+            Hash.writeHashOfFileToFile(FilePaths.UsersPath, FilePaths.UsersHashPath);
+        }
+    }
+
     private int getScoreAdd(boolean ansRight, User user, IO botIO)
     {
         if (ansRight) {

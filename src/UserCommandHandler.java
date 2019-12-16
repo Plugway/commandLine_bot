@@ -1,7 +1,7 @@
 import java.io.IOException;
 
 public class UserCommandHandler {
-    public static void preQuizResolveCommand(String command, User user) throws IOException, InterruptedException, SerializationException {
+    public static void preQuizResolveCommand(String command, User user) throws IOException, InterruptedException, SerializationException, QuizCreationException {
         var botIO = Main.botIO;
         switch (command) {
             case "/start":

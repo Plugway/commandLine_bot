@@ -40,12 +40,12 @@ public class Logic {
         }
     }
 
-    public void startUserInteraction() throws IOException, InterruptedException, SerializationException {
+    public void startUserInteraction() throws IOException, InterruptedException, SerializationException, QuizCreationException {
         botIO.println(helpText, chatId);
         resumeUserInteraction();
     }
 
-    public void resumeUserInteraction() throws IOException, InterruptedException, SerializationException {
+    public void resumeUserInteraction() throws IOException, InterruptedException, SerializationException, QuizCreationException {
         while (true) {
             var userInput = botIO.readUserQuery(user);
             if (adminChatId != 0 && adminWantId == chatId)

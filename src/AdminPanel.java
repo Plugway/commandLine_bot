@@ -15,6 +15,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class AdminPanel {
+    static {
+        initializeAdminPanel();
+    }
+
     private static String adminPassword;
     public static void initializeAdminPanel() {adminPassword = readAdminPassword(FilePaths.AdminPanelPasswordPath);}
     public static String getAdminPassword(){return adminPassword;}

@@ -10,7 +10,6 @@ public class Main {
     {
         UserTable.initializeUserTable(FilePaths.UsersPath);
         Question.parseQuestions(FilePaths.QuestPath);
-        AdminPanel.initializeAdminPanel();
         Logic.initializeAllUserThreads();
 
         System.out.println("started");

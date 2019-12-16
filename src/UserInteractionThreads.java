@@ -8,7 +8,7 @@ public class UserInteractionThreads {
                     new Logic(user).startUserInteraction();
                 else
                     new Logic(user).resumeUserInteraction();
-            } catch (InterruptedException | IOException | SerializationException e) {
+            } catch (InterruptedException | IOException | SerializationException | QuizCreationException e) {
                 e.printStackTrace();
                 throw new RuntimeException("New thread could not be created.");
             }
