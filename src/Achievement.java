@@ -1,4 +1,6 @@
-public class Achievement {
+import java.io.Serializable;
+
+public class Achievement implements Serializable {
 
     public Achievement(String achievementText, String achievementDescription)
     {

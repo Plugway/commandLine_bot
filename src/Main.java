@@ -9,6 +9,7 @@ public class Main {
     public static void main(String[] args) throws DeserializationException, WrongHashException, IOException
     {
         UserTable.initializeUserTable(FilePaths.UsersPath);
+        UserTableSerializer.runSerializer(5000);
         Question.parseQuestions(FilePaths.QuestPath);
         Logic.initializeAllUserThreads();
 
