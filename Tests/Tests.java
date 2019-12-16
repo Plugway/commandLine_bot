@@ -1,10 +1,6 @@
 import org.junit.*;
-import com.pengrad.telegrambot.TelegramBot;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.fail;
 
 public class Tests {
     @Test
@@ -45,35 +41,9 @@ public class Tests {
         question.toggleAsked();
         Assert.assertTrue(question.getAsked());
     }
-/*
-    @Test
-    public void questionGenerationTest() {
-        var testQuestion = Question.generateQuestion("What does the WINE acronym mean?\n" +
-                "}\n" +
-                "1. Wine Is Not an Emulator$\n" +
-                "2. Wine Is Not Unix $\n" +
-                "3. We and I made a NEw acronym$\n" +
-                "}" +
-                "1");
-
-        Assert.assertTrue(Question.isAnswersRight(new int[] {1}, testQuestion.getRightAnswers()));
-        Assert.assertFalse(Question.isAnswersRight(new int[] {2}, testQuestion.getRightAnswers()));
-        Assert.assertFalse(Question.isAnswersRight(new int[] {3}, testQuestion.getRightAnswers()));
-    }
 
     @Test
-    public void highscoreTableTest() throws IOException, ClassNotFoundException, DeserializationException, WrongHashException {
-        User user = (User)ObjectSerialization.deserialize("Tests/testUser.txt");
-        user.getStats().setHighscore(100, user, Main.botIO);
-        UserTable.initializeUserTable("Tests/testUsers.txt");
-        String table = Highscore.generateTable();
-        Assert.assertEquals("Таблица рекордов:", table.substring(0, 17));
-        Assert.assertTrue(table.contains("100"));
-    }
- */
-
-    @Test
-    public void preQuizCommandResolverNonFailureTest() throws IOException, ClassNotFoundException, SerializationException, InterruptedException {
+    public void preQuizCommandResolverNonFailureTest() throws IOException, ClassNotFoundException, SerializationException, InterruptedException, QuizCreationException {
         User user = (User)ObjectSerialization.deserialize("Tests/testUser.txt");
         UserCommandHandler.preQuizResolveCommand("/help", user);
     }
@@ -94,9 +64,8 @@ public class Tests {
     public void gettingUserByTypeTest() throws IOException, ClassNotFoundException, DeserializationException, WrongHashException {
         User user = (User)ObjectSerialization.deserialize("Tests/testUser.txt");
         UserTable.initializeUserTable("Tests/testUsers.txt");
-        user.getStats().setHighscore(1, user, Main.botIO);
 
-        List<User> resultHighscore = UserTable.getUsersByType(FindTypes.highscore, "1");
+        List<User> resultHighscore = UserTable.getUsersByType(FindTypes.highscore, "0");
         Assert.assertTrue(resultHighscore.contains(user));
 
         List<User> resultFirstName = UserTable.getUsersByType(FindTypes.firstname, "QWERTYQWERTYQ");
