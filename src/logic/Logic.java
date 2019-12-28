@@ -36,16 +36,16 @@ public class Logic {
     public static void initializeAllUserThreads() {
         for (User user : UserTable.get()) {
             UserInteractionThreads.createThread(user, false);
-            Logger.log(LogLevels.info,"Initialization: thread for user "+user.getChatId()+"started.");
+            Logger.log(LogLevels.info,"Initialization: thread for user "+user.getChatId()+" started.");
         }
     }
 
-    public void startUserInteraction() throws IOException, InterruptedException, SerializationException, QuizCreationException {
+    public void startUserInteraction() throws InterruptedException{
         botIO.println(helpText, chatId);
         resumeUserInteraction();
     }
 
-    public void resumeUserInteraction() throws IOException, InterruptedException, SerializationException, QuizCreationException {
+    public void resumeUserInteraction() throws InterruptedException{
         while (true) {
             var userInput = botIO.readUserQuery(user);
             if (adminChatId != 0 && adminWantId == chatId)

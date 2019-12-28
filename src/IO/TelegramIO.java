@@ -107,6 +107,7 @@ public class TelegramIO implements IO {
         try {
             return Files.readString(Paths.get(path), StandardCharsets.UTF_8);
         } catch (IOException e) {
+            Logger.log(LogLevels.fatal, "Can't read api key from " + path);
             throw new Error("Can't read api key from " + path);
         }
     }

@@ -4,7 +4,7 @@ public class Duels {
 
     private static ConcurrentLinkedQueue<User> duelQueue = new ConcurrentLinkedQueue<>();
 
-    public static void enterDuel(User user, IO botIO) throws InterruptedException, SerializationException, QuizCreationException {
+    public static void enterDuel(User user, IO botIO) throws InterruptedException, QuizCreationException {
         botIO.println("Введите число вопросов для дуэли.", user.getChatId());
         user.setCurrentQuestCount(QuizLogic.getTotalQuestionsToAsk(user, Question.getQuestionsList().size(), botIO));
         if (duelQueue.size() != 0)
@@ -36,6 +36,7 @@ public class Duels {
     }
 
     private static void duelProcessing(User user) throws InterruptedException {
+        Thread.sleep(1000); //чтобы успеть переключиться на дуэль
         while (user.playsDuel())
         {
             Thread.sleep(1000);

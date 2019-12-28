@@ -16,13 +16,13 @@ public class QuizLogic {
     } //useless shit
 
     private void verifyUsersLength(User... users) throws QuizCreationException {
-        if (users.length > 2)
+        if (users.length > 2 || users.length == 0) {
+            Logger.log(LogLevels.error, "QuizLogic: Can't create quiz with "+users.length+" users.");
             throw new QuizCreationException("Unable to create a quiz with more than 2 users.");
-        else if (users.length == 0)
-            throw new QuizCreationException("Unable to create a quiz with 0 users.");
+        }
     }
 
-    public static void enterQuiz(User user, IO botIO) throws SerializationException, InterruptedException, QuizCreationException {
+    public static void enterQuiz(User user, IO botIO) throws InterruptedException, QuizCreationException {
         botIO.println("Сколько вопросов?", user.getChatId());
         user.setCurrentQuestCount(getTotalQuestionsToAsk(user, Question.getQuestionsList().size(), botIO));
         new QuizLogic(botIO, user).runQuiz();
@@ -35,7 +35,7 @@ public class QuizLogic {
     private int totalQuestionsToAsk;
     private IO botIO;
 
-    public void runQuiz() throws InterruptedException, SerializationException {
+    public void runQuiz() throws InterruptedException{
 
         determineTotalQuestions();
 
@@ -202,7 +202,9 @@ public class QuizLogic {
     private void initializeUsers(User... users)
     {
         this.users = users;
-        usersIds = Arrays.stream(users).peek(User::togglePlaysDuel).mapToLong(User::getChatId).toArray();//peek(User::togglePlaysDuel) включает режим дуэли
+        usersIds = Arrays.stream(users).mapToLong(User::getChatId).toArray();//peek(User::togglePlaysDuel) включает режим дуэли
+        for (User user:users)
+            user.togglePlaysDuel();
         usersScores = new int[users.length];
     }
 
@@ -313,6 +315,10 @@ public class QuizLogic {
 
     private void resetUserValues()
     {
-        Arrays.stream(users).peek(user -> user.setCurrentQuestCount(0)).peek(User::togglePlaysDuel);
+        for (User user:users)
+        {
+            user.togglePlaysDuel();
+            user.setCurrentQuestCount(0);
+        }
     }
 }

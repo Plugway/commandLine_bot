@@ -8,7 +8,6 @@ public class Main {
     public static IO botIO = BotIOFactory.getBotIO(botMode);
     public static void main(String[] args) throws DeserializationException, WrongHashException, IOException
     {
-        Logger.initializeLogger();
         UserTable.initializeUserTable();
         Question.parseQuestions();
         Logic.initializeAllUserThreads();

@@ -5,6 +5,7 @@ public class BotIOFactory {
         } else if (botIOType == BotIOType.Telegram) {
             return new TelegramIO();
         }
+        Logger.log(LogLevels.fatal, "BotIOFactory: Unexpected botType value " + botIOType);
         throw new IllegalStateException("Unexpected botType value: " + botIOType);
     }
 }

@@ -1,11 +1,11 @@
-import java.io.IOException;
-
 public class UserCommandHandler {
-    public static void preQuizResolveCommand(String command, User user) throws IOException, InterruptedException, SerializationException, QuizCreationException {
+    public static void preQuizResolveCommand(String command, User user) throws InterruptedException {
         var botIO = Main.botIO;
         switch (command) {
             case "/start":
-                QuizLogic.enterQuiz(user, botIO);
+                try {
+                    QuizLogic.enterQuiz(user, botIO);
+                } catch (QuizCreationException ignored){} // сообщить юзеру
                 break;
             case "/help":
                 botIO.println(Logic.getHelpText(), user.getChatId());
@@ -14,13 +14,17 @@ public class UserCommandHandler {
                 botIO.println("Куда выходить? Викторину ещё даже не начали :)", user.getChatId());
                 break;
             case "/duel":
-                Duels.enterDuel(user, botIO);
+                try {
+                    Duels.enterDuel(user, botIO);
+                } catch (QuizCreationException ignored){
+                    System.out.println("WWWWWWWWWAAAAAAAAAAAAAAAAAAAATTTTTTTTTTTTTTTTT");
+                }  // сообщить юзерам, распустить всех, чтобы все могли продолжить юзать бота
                 break;
             case "/admin":
                 botIO.println("Введите ключ досупа:", user.getChatId());
                 var response = botIO.readUserQuery(user);
                 if (response.equals(AdminPanel.getAdminPassword()))
-                    new AdminPanel(user).run();
+                    new AdminPanel(user).run();//why interrupted???
                 else
                     botIO.println("Неверный пароль.", user.getChatId());
                 break;

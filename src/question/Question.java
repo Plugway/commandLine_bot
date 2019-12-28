@@ -45,8 +45,10 @@ public class Question {
         {
             currentQuestion = new NumQuestion(splitted[1], splitted[2], splitted[3]);
         }
-        else
+        else {
+            Logger.log(LogLevels.fatal, "Questions parse error: Question: " + splitted[1]);
             throw new Error("Questions parse error: Question: " + splitted[1]);
+        }
         return currentQuestion;
     }
 }

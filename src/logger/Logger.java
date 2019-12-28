@@ -7,18 +7,20 @@ import java.util.Date;
 public class Logger {
     private static FileWriter fileWriter;
     private static boolean loggerIsON = false;
+    private static boolean isLoggerIsInitialized = false;
     private static DateFormat fullDateFormat;
     private static DateFormat timeFormat;
-    public static void initializeLogger()
+    private static void initializeLogger()
     {
         fullDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         timeFormat = new SimpleDateFormat("HH:mm:ss");
         try {
-            fileWriter = new FileWriter(FilePaths.LogPath);
+            fileWriter = new FileWriter(FilePaths.LogPath, true);
             loggerIsON = true;
         } catch (IOException e) {
             System.out.println("Can't open log file. Logging to file is turned off.");
         }
+        isLoggerIsInitialized = true;
     }
     public static void flushFW() {
         try
@@ -47,7 +49,18 @@ public class Logger {
     }
     public static void log(LogLevels logLevel, String message)
     {
+        message = message.replaceAll("\n", "\\n");
         var date = new Date();
+        if (!isLoggerIsInitialized) {
+            initializeLogger();
+            if (loggerIsON)
+                try {
+                    fileWriter.write("\n[" + fullDateFormat.format(date) + "]LOGGING STARTED\n");
+                } catch (IOException ignored){
+                    System.out.println("[" + fullDateFormat.format(date) + "]Log failed.\n");
+                }
+            System.out.print("[" + fullDateFormat.format(date) + "]LOGGING STARTED\n");
+        }
         var res = "["+timeFormat.format(date)+"](" + getLogLevel(logLevel) + ")|"+message+"|[" + fullDateFormat.format(date) + "]\n";
         System.out.print(res);
         if (loggerIsON)

@@ -7,12 +7,12 @@ public class UserTableSerialization {
         try {
             ObjectSerialization.serialize(userTable, filePath);
         } catch (IOException e) {
-            throw new SerializationException("Unable to write to the file containing users' info");
+            throw new SerializationException();
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static List<User> deserialize(String filePath) throws DeserializationException, WrongHashException {
+    public static List<User> deserialize(String filePath) throws DeserializationException, WrongHashException{
         List<User> resultAsList;
         Object resultAsObject;
 
