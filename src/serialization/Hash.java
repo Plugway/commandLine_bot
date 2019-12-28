@@ -11,7 +11,7 @@ public class Hash
         try {
             file2Contents = readFileAsBytes(file2Path);
         } catch (IOException e) {
-            System.out.println(file2Path + " doesn't exist. If it's the users table file, it will be created when a new user messages the bot. Thus assuming hash \"verification\" was correct.");
+            Logger.log(LogLevels.warn, "Initialization: "+file2Path + " doesn't exist. If it's the users table file, it will be created when a new user messages the bot. Thus assuming hash \"verification\" was correct.");
             return true;
         }
         var file2Hash = calculateNewHash(file2Contents);
@@ -20,11 +20,10 @@ public class Hash
         try {
             hashFileContents = new String(readFileAsBytes(hashFilePath));
         } catch (IOException e) {
-            System.out.println(hashFilePath + " doesn't exist. If it's the users table hash file, it will be created when a new user messages the bot. Thus assuming hash \"verification\" was correct.");
+            Logger.log(LogLevels.warn, "Initialization: "+hashFilePath + " doesn't exist. If it's the users table hash file, it will be created when a new user messages the bot. Thus assuming hash \"verification\" was correct.");
             return true;
         }
-
-        System.out.println("hashFileContents: " + hashFileContents + ", file2Hash " + file2Hash);
+        Logger.log(LogLevels.info, "Initialization: HashFileContents: " + hashFileContents + ", file2Hash " + file2Hash);
         return (hashFileContents.equals(file2Hash));
     }
 

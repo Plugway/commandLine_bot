@@ -8,11 +8,13 @@ public class Main {
     public static IO botIO = BotIOFactory.getBotIO(botMode);
     public static void main(String[] args) throws DeserializationException, WrongHashException, IOException
     {
-        UserTable.initializeUserTable(FilePaths.UsersPath);
-        UserTableSerializer.runSerializer(5000);
-        Question.parseQuestions(FilePaths.QuestPath);
+        Logger.initializeLogger();
+        UserTable.initializeUserTable();
+        Question.parseQuestions();
         Logic.initializeAllUserThreads();
+        AdminPanel.initializeAdminPanel();
+        UserTableSerializer.runSerializer(10000);
 
-        System.out.println("started");
+        Logger.log(LogLevels.info,"Initialization finished, bot started.");
     }
 }

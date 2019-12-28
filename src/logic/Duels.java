@@ -6,7 +6,7 @@ public class Duels {
 
     public static void enterDuel(User user, IO botIO) throws InterruptedException, SerializationException, QuizCreationException {
         botIO.println("Введите число вопросов для дуэли.", user.getChatId());
-        user.setCurrentQuestCount(QuizLogic.getTotalQuestionsToAsk(user, Question.questionsList.size(), botIO));
+        user.setCurrentQuestCount(QuizLogic.getTotalQuestionsToAsk(user, Question.getQuestionsList().size(), botIO));
         if (duelQueue.size() != 0)
         {
             new QuizLogic(botIO, user, duelQueue.poll()).runQuiz();
@@ -36,7 +36,7 @@ public class Duels {
     }
 
     private static void duelProcessing(User user) throws InterruptedException {
-        while (user.getDuelId() != 0)
+        while (user.playsDuel())
         {
             Thread.sleep(1000);
         }

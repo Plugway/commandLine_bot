@@ -1,7 +1,7 @@
 public class WordQuestion extends Question {
     public WordQuestion(String questText, String rightAnswer)
     {
-        setQuestionText(questText);
+        super.mQuestionText = questText;
         this.rightAnswer = rightAnswer;
     }
     private String rightAnswer;

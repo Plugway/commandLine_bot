@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 public class Highscore
 {
-    public static String generateTable() {
+    public static String generateTable(User user) {
         var highscores = getList();
         var builder = new StringBuilder();
         var linesToPrint = 10;
@@ -15,7 +15,21 @@ public class Highscore
             var usr = highscores.get(i);
             builder.append(printPlace(i+1)).append(usr.getToPrint()).append("\n");
         }
+        appendUserPlace(builder, user, highscores);
         return builder.toString();
+    }
+
+    private static void appendUserPlace(StringBuilder builder, User user, List<User> highscores)
+    {
+        if (highscores.indexOf(user) == -1)
+            builder.append("\nПока что у вас нет рекорда.");
+        else {
+            builder.append("\nВы на ")
+                    .append(highscores.indexOf(user) + 1)
+                    .append(" месте со счетом ")
+                    .append(user.getHighscore())
+                    .append(".");
+        }
     }
 
     private static List<User> getList()

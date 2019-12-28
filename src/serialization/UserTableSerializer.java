@@ -5,11 +5,12 @@ public class UserTableSerializer {
             while (true)
             {
                 try {
+                    Thread.sleep(delay);
                     UserTableSerialization.serialize(UserTable.get(), FilePaths.UsersPath);
                     Hash.writeHashOfFileToFile(FilePaths.UsersPath, FilePaths.UsersHashPath);
-                    Thread.sleep(delay);
+                    Logger.flushFW();           //здесь происходит запись в текстовый файл из буфера
                 } catch (SerializationException | InterruptedException e) {
-                    System.out.println("UTSerializer: Error: can't serialize.");
+                    Logger.log(LogLevels.error, "UTSerializer: can't serialize.");
                 }
             }
         });

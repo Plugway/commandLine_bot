@@ -3,7 +3,7 @@ import com.pengrad.telegrambot.model.Update;
 import java.util.List;
 
 public class UpdatesHandler {
-    public static long handleUpdates(List<Update> updates) throws SerializationException {
+    public static long handleUpdates(List<Update> updates) {
         var update = updates.get(0);
         if (update.message() == null)
             return update.updateId();

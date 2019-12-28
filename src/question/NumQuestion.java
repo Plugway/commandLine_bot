@@ -5,7 +5,7 @@ import java.util.List;
 public class NumQuestion extends Question {
     public NumQuestion(String questText, String answers, String rightAnswers)
     {
-        setQuestionText(questText);
+        super.mQuestionText = questText;
         mAnswers = Arrays.asList(answers.split("\\$"));
         for (String answer : rightAnswers.split(",")) mRightAnswers.add(Integer.parseInt(answer));
     }

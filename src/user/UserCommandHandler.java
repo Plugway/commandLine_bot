@@ -25,7 +25,7 @@ public class UserCommandHandler {
                     botIO.println("Неверный пароль.", user.getChatId());
                 break;
             case "/top":
-                botIO.println(Highscore.generateTable(), user.getChatId());
+                botIO.println(Highscore.generateTable(user), user.getChatId());
                 break;
             case "/achievements":
                 botIO.println(user.getAchievementsListToPrint(), user.getChatId());

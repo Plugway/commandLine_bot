@@ -59,7 +59,7 @@ public class Tests {
         User user = (User)ObjectSerialization.deserialize("Tests/testUser.txt");
         UserCommandHandler.preDuelResolveCommand("/help", user);
     }
-
+/*
     @Test
     public void gettingUserByTypeTest() throws IOException, ClassNotFoundException, DeserializationException, WrongHashException {
         User user = (User)ObjectSerialization.deserialize("Tests/testUser.txt");
@@ -73,5 +73,5 @@ public class Tests {
 
         List<User> resultUserName = UserTable.getUsersByType(FindTypes.username, "QWERTYQWERTYQ");
         Assert.assertTrue(resultUserName.contains(user));
-    }
+    }*/
 }

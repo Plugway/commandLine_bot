@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Queue;
+import java.util.*;
 
 public class TelegramIO implements IO {
 
@@ -25,14 +22,7 @@ public class TelegramIO implements IO {
     }
     public void setListener()
     {
-        bot.setUpdatesListener(updates -> {
-            try {
-                return (int) UpdatesHandler.handleUpdates(updates);
-            } catch (SerializationException e) {
-                e.printStackTrace();
-            }
-            return 0;
-        });
+        bot.setUpdatesListener(updates -> (int) UpdatesHandler.handleUpdates(updates));
     }
 
     public String readUserQuery(User user) throws InterruptedException {
@@ -40,7 +30,7 @@ public class TelegramIO implements IO {
             Thread.sleep(1000);
         }
         var userInput = user.messages;
-        System.out.println("Ввод от юзера с chatId " + user.getChatId() + ":\n" + userInput.peek());
+        Logger.log(LogLevels.info,"User input: "+ userInput.peek()+", chatId: "+user.getChatId());
         return userInput.poll();
     }
 
@@ -50,8 +40,8 @@ public class TelegramIO implements IO {
             if (id == 0)                //не отправляем сообщения на id 0, для совмещения викторины и дуэлей
                 continue;
             bot.execute(new SendMessage(id, response));
-            System.out.println("Выслано юзеру с chatId " + id + ":\n" + response);
         }
+        Logger.log(LogLevels.info,"Sent: " + response + ", chatIds: "+ Arrays.toString(chatId));
     }
 
     public String[] readDuelUsersQueries(User user1, User user2) throws InterruptedException, DuelInterruptedException
@@ -64,28 +54,32 @@ public class TelegramIO implements IO {
         {
             if (user2.messages.peek().equals("/exit")) {
                 user2.messages.poll();
-                throw new DuelInterruptedException("desire,2");
+                throw new DuelInterruptedException(2, DuelInterruptedCause.desire);
             }
             input[1] = user2.messages.poll();
             var res = handleDuelUserInput(user1, user2, 2);
             if (res.equals("/exit"))
-                throw new DuelInterruptedException("desire,1");
+                throw new DuelInterruptedException(1, DuelInterruptedCause.desire);
             input[0] = res;
         }
         else
         {
             if (user1.messages.peek().equals("/exit")) {
                 user1.messages.poll();
-                throw new DuelInterruptedException("desire,1");
+                throw new DuelInterruptedException(1, DuelInterruptedCause.desire);
             }
             input[0] = user1.messages.poll();
             var res = handleDuelUserInput(user2, user1, 1);
             if (res.equals("/exit"))
-                throw new DuelInterruptedException("desire,2");
+                throw new DuelInterruptedException(2, DuelInterruptedCause.desire);
             input[1] = res;
         }
 
-        System.out.println("Ввод от юзера с chatId " + user1.getChatId() + ":\n" + input[0]+"\nи ввод от юзера с chatId " + user2.getChatId() + ":\n" + input[1]);
+        Logger.log(LogLevels.info,"User #1 input: "
+                + input[0] + ", chatId: "
+                + user1.getChatId()+"; user #2 input: "
+                + input[1] + ", chatId: "
+                + user2.getChatId());
         return input;
     }
 
@@ -98,7 +92,7 @@ public class TelegramIO implements IO {
             if (user2.messages.size() != 0)
             {
                 if (Objects.requireNonNull(user2.messages.poll()).equals("/exit"))
-                    throw new DuelInterruptedException("timeout," + respondedUser);
+                    throw new DuelInterruptedException(respondedUser, DuelInterruptedCause.timeout);
                 else
                 {
                     println("Подождите еще немного, либо напишите /exit для того чтобы сдаться.", user2.getChatId());

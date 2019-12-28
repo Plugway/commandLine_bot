@@ -1,14 +1,11 @@
-import com.pengrad.telegrambot.model.Chat;
-
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserTable {
 
-    public static void initializeUserTable(String userTablePath) throws DeserializationException, WrongHashException {
-        UserTable.userTable = UserTableSerialization.deserialize(userTablePath);
+    public static void initializeUserTable() throws DeserializationException, WrongHashException {
+        UserTable.userTable = UserTableSerialization.deserialize(FilePaths.UsersPath);
     }
 
     private static List<User> userTable;

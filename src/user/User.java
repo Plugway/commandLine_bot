@@ -13,8 +13,7 @@ public class User implements Serializable {
         firstName = chat.firstName();
         lastName = chat.lastName();
         chatId = chat.id();
-        this.chat = chat;
-        duelId = 0;
+        playsDuel = false;
         currentQuestCount = 0;
     }
 
@@ -23,8 +22,7 @@ public class User implements Serializable {
     private String firstName;
     private String lastName;
     private long chatId;
-    private Chat chat;
-    private long duelId;
+    private boolean playsDuel;
     private int currentQuestCount;
     private Stats stats = new Stats();
     private List<Achievement> achievements = new ArrayList<>();
@@ -51,9 +49,9 @@ public class User implements Serializable {
         return lastName;
     }
 
-    public long getDuelId(){ return duelId; }
+    public boolean playsDuel(){ return playsDuel; }
 
-    public void setDuelId(long duelId){this.duelId = duelId;}
+    public void togglePlaysDuel(){playsDuel = !playsDuel;}
 
     public void setCurrentQuestCount(int currentQuestCount){this.currentQuestCount = currentQuestCount;}
 

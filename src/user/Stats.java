@@ -9,7 +9,6 @@ public class Stats implements Serializable {
     private int duelWinsCount;
     private int duelLostCount;
     private int quizHighscoreHitCount;
-    private int achievementsCount;
 
     public int getQuizHighscoreHitCount(){return quizHighscoreHitCount;}
     public int getQuestionsCount() { return questionsCount; }
@@ -36,10 +35,14 @@ public class Stats implements Serializable {
         Achievement a = null;
         switch (quizHighscoreHitCount)
         {
+            case 1:
+                a = new Achievement("Первый результат.", "Поставить первый рекорд.", user);
+                break;
             case 2:
-                var b = new Achievement("Я могу лучше!","Побить свой рекорд в первый раз.");
-                if (!user.getAchievements().contains(b))
-                    user.addAchievement(a = b);
+                a = new Achievement("Я могу лучше!","Побить свой рекорд в первый раз.", user);
+                break;
+            case 6:
+                a = new Achievement("Как по лестнице.","Побить свой рекорд в пятый раз.", user);
                 break;
             default:
                 break;
@@ -54,9 +57,16 @@ public class Stats implements Serializable {
         switch (questionsCount)
         {
             case 10:
-                var b = new Achievement("Первые шаги.","Ответить на 10 вопросов викторины.");
-                if (!user.getAchievements().contains(b))
-                    user.addAchievement(a = b);
+                a = new Achievement("Первые шаги.","Ответить на 10 вопросов викторины.", user);
+                break;
+            case 100:
+                a = new Achievement("Вторые шаги.","Ответить на 100 вопросов викторины.", user);
+                break;
+            case 1000:
+                a = new Achievement("Очень упертый.","Ответить на 1000 вопросов викторины.", user);
+                break;
+            case 10000:
+                a = new Achievement("Очень упоротый(как ты вообще здесь оказался?).","Ответить на 10000 вопросов викторины.", user);
                 break;
             default:
                 break;
@@ -72,9 +82,16 @@ public class Stats implements Serializable {
         switch (rightQuestionsCount)
         {
             case 10:
-                var b = new Achievement("Начальные знания.","Ответить на 10 вопросов викторины правильно.");
-                if (!user.getAchievements().contains(b))
-                    user.addAchievement(a = b);
+                a = new Achievement("Начальные знания.","Ответить на 10 вопросов викторины правильно.", user);
+                break;
+            case 100:
+                a = new Achievement("Достаточно умно.","Ответить на 100 вопросов викторины правильно.", user);
+                break;
+            case 1000:
+                a = new Achievement("Гуру.","Ответить на 1000 вопросов викторины правильно.", user);
+                break;
+            case 10000:
+                a = new Achievement("Читер?","Ответить на 10000 вопросов викторины правильно.", user);
                 break;
             default:
                 break;
@@ -87,17 +104,14 @@ public class Stats implements Serializable {
     {
         this.highscore = highscore;
         Achievement a = null;
-        Achievement b;
         if (highscore >= 10)
         {
-            b = new Achievement("Начальные знания.","Поставить рекорд больше 10 или 10.");
-            if (!user.getAchievements().contains(b))
-                user.addAchievement(a = b);
-            if (highscore >= 25)
+            a = new Achievement("Начальные знания.","Поставить рекорд 10.", user);
+            if (highscore >= 50)
             {
-                b = new Achievement("Продвинутый мозг.","Поставить рекорд больше 25 или 25.");
-                if (!user.getAchievements().contains(b))
-                    user.addAchievement(a = b);
+                a = new Achievement("Продвинутый мозг.","Поставить рекорд 50.", user);
+                if (highscore >= 1000)
+                    a = new Achievement("Есть ли предел?.","Поставить рекорд 1000.", user);
             }
         }
         if (a != null)
@@ -111,9 +125,15 @@ public class Stats implements Serializable {
         switch (ignoredMessagesCount)
         {
             case 5:
-                var b = new Achievement("Просто ошибка.","Озадачить бота, отправив ему сообщение без текста.");
-                if (!user.getAchievements().contains(b))
-                    user.addAchievement(a = b);
+                a = new Achievement("Просто ошибка.","Озадачить бота, отправив ему сообщение без текста.", user);
+                break;
+            case 30:
+                a = new Achievement("Чего ты добиваешься?","Продолжить отправлять неподдерживаемые сообщения.", user);
+                break;
+            case 500:
+                a = new Achievement("Как об стену горох.","Бот проигнорил 500 сообщений от тебя. Готов ли ты дальше это делать? Есть ли ачивки дальше?", user);
+                break;
+            default:
                 break;
         }
         if (a != null)
@@ -127,9 +147,9 @@ public class Stats implements Serializable {
         switch (duelCount)
         {
             case 5:
-                var b = new Achievement("Начинающий дуэлянт.","Принять участие в дуэли 5 раз.");
-                if (!user.getAchievements().contains(b))
-                    user.addAchievement(a = b);
+                a = new Achievement("Начинающий дуэлянт.","Принять участие в дуэли 5 раз.", user);
+                break;
+            default:
                 break;
         }
         if (a != null)
@@ -143,9 +163,9 @@ public class Stats implements Serializable {
         switch (duelWinsCount)
         {
             case 5:
-                var b = new Achievement("Везунчик.","Одержать победу в дуэли 5 раз.");
-                if (!user.getAchievements().contains(b))
-                    user.addAchievement(a = b);
+                a = new Achievement("Везунчик.","Одержать победу в дуэли 5 раз.", user);
+                break;
+            default:
                 break;
         }
         if (a != null)
@@ -159,9 +179,9 @@ public class Stats implements Serializable {
         switch (duelLostCount)
         {
             case 5:
-                var b = new Achievement("Просто не повезло.","Проиграть в дуэли 5 раз.");
-                if (!user.getAchievements().contains(b))
-                    user.addAchievement(a = b);
+                a = new Achievement("Просто не повезло.","Проиграть в дуэли 5 раз.", user);
+                break;
+            default:
                 break;
         }
         if (a != null)

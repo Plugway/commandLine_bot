@@ -15,13 +15,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class AdminPanel {
-    static {
-        //initializeAdminPanel();
-        adminPassword = readAdminPassword(FilePaths.AdminPanelPasswordPath);
-    }
-
     private static String adminPassword;
-    //public static void initializeAdminPanel() {}
+    public static void initializeAdminPanel() {adminPassword = readAdminPassword(FilePaths.AdminPanelPasswordPath);}
     public static String getAdminPassword(){return adminPassword;}
 
     public AdminPanel(User user){
@@ -218,10 +213,10 @@ public class AdminPanel {
     {
         try {
             var pass = Files.readString(Paths.get(path), StandardCharsets.UTF_8).replaceAll("\n", "");
-            System.out.println("Admin password read successfully");
+            Logger.log(LogLevels.info, "Initialization: Admin password read successfully");
             return pass;
         } catch (IOException e) {
-            System.out.println("Can't read admin pass from " + path + ".\nNow admin pass equals api key.");
+            Logger.log(LogLevels.warn, "Initialization: Can't read admin pass from " + path + ". Now admin pass equals api key.");
             return TelegramIO.getApiKey();
         }
     }

@@ -9,37 +9,32 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Question {
-    private String mQuestionText;
+    protected String mQuestionText;
     private boolean mAsked = false;
+    private static List<Question> questionsList;
 
     public String getQuestionText()
     {
         return mQuestionText;
     }
-    public void setQuestionText(String text)
-    {
-        mQuestionText = text;
-    }
     public boolean getAsked() {
         return mAsked;
     }
-
     public void toggleAsked() {
         this.mAsked = !mAsked;
     }
+    public static List<Question> getQuestionsList(){return questionsList;}
 
-    public static List<Question> questionsList;
-
-    public static void parseQuestions(String path) throws IOException
+    public static void parseQuestions() throws IOException
     {
-        var questions = Files.readString(Paths.get(path), StandardCharsets.UTF_8).
+        var questions = Files.readString(Paths.get(FilePaths.QuestPath), StandardCharsets.UTF_8).
                 replaceAll("\n", "").split("]");
         questionsList = Stream.of(questions)
                 .map(Question::generateQuestion)
                 .collect(Collectors.toList());
     }
 
-    public static Question generateQuestion(String question) {
+    private static Question generateQuestion(String question) {
         var splitted = question.split("}");
         Question currentQuestion;
         if (splitted[0].equals("W"))

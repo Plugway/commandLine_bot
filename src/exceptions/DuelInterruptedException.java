@@ -1,5 +1,10 @@
 public class DuelInterruptedException extends Exception{
-    public DuelInterruptedException(String message) {
-        super(message);
+    private int userNumber;
+    private DuelInterruptedCause cause;
+    public DuelInterruptedException(int userNumber, DuelInterruptedCause cause) {
+        this.userNumber = userNumber;
+        this.cause = cause;
     }
+    public int getUserNumber(){return userNumber;}
+    public DuelInterruptedCause getDuelCause(){return cause;}
 }

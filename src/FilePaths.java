@@ -5,4 +5,5 @@ public class FilePaths
     public static final String UsersHashPath = "data/usersHash.txt";
     public static final String ApiKeyPath = "data/api.txt";
     public static final String AdminPanelPasswordPath = "data/admpass.txt";
+    public static final String LogPath = "data/log.txt";
 }

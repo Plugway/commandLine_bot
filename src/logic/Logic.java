@@ -35,8 +35,8 @@ public class Logic {
 
     public static void initializeAllUserThreads() {
         for (User user : UserTable.get()) {
-            System.out.println(user.getChatId());
             UserInteractionThreads.createThread(user, false);
+            Logger.log(LogLevels.info,"Initialization: thread for user "+user.getChatId()+"started.");
         }
     }
 
