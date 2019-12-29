@@ -49,8 +49,7 @@ public class QuizLogic {
             for (currentQuestionNumber = 0; currentQuestionNumber < totalQuestionsToAsk; ++currentQuestionNumber) {
                 var currentQuestion = questions.get(currentQuestionNumber);
 
-                botIO.println((currentQuestionNumber + 1) + styleDelimiter + currentQuestion.getQuestionText(),
-                        usersIds);         //печатаем вопрос
+                botIO.println((currentQuestionNumber + 1) + styleDelimiter + currentQuestion.getQuestionText(), usersIds);         //печатаем вопрос
                 if (currentQuestion instanceof NumQuestion)
                     handleNumQuestion(currentQuestion);
                 else if (currentQuestion instanceof WordQuestion)
@@ -80,7 +79,7 @@ public class QuizLogic {
     private void handleNumQuestion(Question currentQuestion) throws QuizShouldFinishException, InterruptedException, DuelInterruptedException {
         var currentNumQuestion = (NumQuestion)currentQuestion;
         var answers = currentNumQuestion.getAnswers();
-        for (String answer : answers) botIO.println(answer, usersIds);  //печатаем ответы
+        for (String answer : answers) botIO.println(answer, Keyboards.numQuestionKeyboard, usersIds);  //печатаем ответы
         if (users.length == 1) {
             var intInput = handleIntUserQuizInput(users[0], botIO);
             usersScores[0] += getScoreAdd(currentNumQuestion.assertAnswers(intInput), users[0], botIO);
@@ -109,7 +108,7 @@ public class QuizLogic {
         var builder = new StringBuilder().append("Количество вопросов, предложенное игроками:\n");
         for (var i = 0; i < users.length;i++)
         {
-            builder.append(i).append(" - ").append(users[i].getCurrentQuestCount()).append("\n");
+            builder.append(i+1).append(" - ").append(users[i].getCurrentQuestCount()).append("\n");
         }
         builder.append("Число вопросов в дуэли: ").append(totalQuestionsToAsk);
         return builder.toString();

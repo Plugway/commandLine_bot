@@ -49,7 +49,7 @@ public class Logger {
     }
     public static void log(LogLevels logLevel, String message)
     {
-        message = message.replaceAll("\n", "\\n");
+        message = message.replaceAll("\n", "/n");
         var date = new Date();
         if (!isLoggerIsInitialized) {
             initializeLogger();

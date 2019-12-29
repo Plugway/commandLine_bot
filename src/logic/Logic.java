@@ -41,7 +41,7 @@ public class Logic {
     }
 
     public void startUserInteraction() throws InterruptedException{
-        botIO.println(helpText, chatId);
+        botIO.println(helpText, Keyboards.mainMenuKeyboard, chatId);
         resumeUserInteraction();
     }
 

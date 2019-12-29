@@ -13,6 +13,9 @@ public class ConsoleIO implements IO {
     }
 
     @Override
+    public void println(String response, Keyboards keyboard, long... chatId) {
+
+    }
     public void println(String response, long... chatId) { }
 
     public void println(String response, long chatId) {

@@ -1,4 +1,6 @@
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.request.Keyboard;
+import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 
 import java.io.IOException;
@@ -34,14 +36,15 @@ public class TelegramIO implements IO {
         return userInput.poll();
     }
 
+    public void println(String response, Keyboards keyboard, long... chatId) {
+        for (long id : chatId)
+            bot.execute(new SendMessage(id, response).replyMarkup(KeyboardsStorage.get(keyboard)));
+        Logger.log(LogLevels.info,"Sent: " + response + ", keyboard: "+keyboard+", chatIds: "+ Arrays.toString(chatId));
+    }
     public void println(String response, long... chatId) {
         for (long id : chatId)
-        {
-            if (id == 0)                //не отправляем сообщения на id 0, для совмещения викторины и дуэлей
-                continue;
             bot.execute(new SendMessage(id, response));
-        }
-        Logger.log(LogLevels.info,"Sent: " + response + ", chatIds: "+ Arrays.toString(chatId));
+        Logger.log(LogLevels.info,"Sent: " + response + ", keyboard: empty, chatIds: "+ Arrays.toString(chatId));
     }
 
     public String[] readDuelUsersQueries(User user1, User user2) throws InterruptedException, DuelInterruptedException

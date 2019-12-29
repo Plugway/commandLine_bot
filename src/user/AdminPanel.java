@@ -25,8 +25,7 @@ public class AdminPanel {
     private User user;
     private IO botIO = Main.botIO;
     public void run() throws InterruptedException {
-        var mainMenuCommands="Доступные команды:\n1./find\n2./sendAll\n3./sleep\n4./exit";
-        botIO.println("Добро пожаловать.\n" + mainMenuCommands, user.getChatId());
+        botIO.println("Добро пожаловать.\nДоступные команды:\n1./find\n2./sendAll\n3./sleep\n4./exit", Keyboards.adminMain, user.getChatId());
         while (true)
         {
             var userCommand = botIO.readUserQuery(user);
@@ -47,7 +46,7 @@ public class AdminPanel {
                 case "/exit":
                     return;
                 default:
-                    botIO.println("Неверная команда.", user.getChatId());
+                    botIO.println("Неверная команда.", Keyboards.adminMain, user.getChatId());
             }
         }
     }
@@ -83,13 +82,13 @@ public class AdminPanel {
         switch (type)
         {
             case adminMain:
-                botIO.println("Вы в главном меню.\n" + mainMenuCommands, user.getChatId());
+                botIO.println("Вы в главном меню.\n" + mainMenuCommands, Keyboards.adminMain, user.getChatId());
                 break;
             case adminFindDial:
-                botIO.println(findDialText, user.getChatId());
+                botIO.println(findDialText, Keyboards.adminFindDial, user.getChatId());
                 break;
             case adminInteractUser:
-                botIO.println("Меню взаимодействия с пользователем.\nДоступные команды:\n1./talk\n2./exit", user.getChatId());
+                botIO.println("Меню взаимодействия с пользователем.\nДоступные команды:\n1./talk\n2./exit", Keyboards.adminUserDial, user.getChatId());
         }
     }
     private void runSendAllDial() throws InterruptedException {
@@ -107,7 +106,7 @@ public class AdminPanel {
     }
     private void runFindDial() throws InterruptedException {
         var findDialText = "Меню поиска участников.\nДоступные команды:\n1./chatId\n2./username\n3./firstname\n4./lastname\n5./highscore\n6./exit";
-        botIO.println(findDialText, user.getChatId());
+        botIO.println(findDialText, Keyboards.adminFindDial, user.getChatId());
         while (true)
         {
             var userCommand = botIO.readUserQuery(user);
@@ -136,7 +135,7 @@ public class AdminPanel {
                 case "/exit":
                     return;
                 default:
-                    botIO.println("Неверная команда.", user.getChatId());
+                    botIO.println("Неверная команда.", Keyboards.adminFindDial, user.getChatId());
             }
         }
     }
@@ -188,7 +187,7 @@ public class AdminPanel {
                 case "/exit":
                     return;
                 default:
-                    botIO.println("Неверная команда.", user.getChatId());
+                    botIO.println("Неверная команда.", Keyboards.adminUserDial, user.getChatId());
             }
         }
     }
